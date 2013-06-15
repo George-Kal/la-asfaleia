@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+
+<script>
+/*
+var doc = document;
+doc.open();
+doc.write( window.opener._cke_htmlToLoad );
+doc.close();
+
+delete window.opener._cke_htmlToLoad;
+*/
+</script>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Λογισμικό τεχνικού ασφαλείας &amp εκτίμησης επαγγελματικού κινδύνου</title>
+    
+	<link rel="stylesheet" href="../../../../javascripts/bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" type="text/css"  href="../../../../stylesheets/calendar.css"/>
+</head>
+
+<body>
+
+<div id="insertIntoMe"></div>
+</body>
+</html>
+<script>
+var doc = window.opener._cke_htmlToLoad; // is string
+var innerBody = ( doc.replace(/((?:.(?!<\s*body[^>]*>))+.<\s*body[^>]*>)|(<\s*\/\s*body\s*\>.+)/g,'') );
+document.getElementById('insertIntoMe').innerHTML = innerBody;
+</script>

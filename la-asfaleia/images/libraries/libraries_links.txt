@@ -1,0 +1,15 @@
+https://github.com/catfan/Medoo
+
+http://twitter.github.io/bootstrap/
+
+http://sourceforge.net/projects/tcpdf
+
+http://sourceforge.net/projects/phpmyadmin/
+
+http://php.net/
+
+http://www.mysql.com/
+
+http://ckeditor.com/
+
+http://pchart.sourceforge.net/
