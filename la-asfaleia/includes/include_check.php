@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 Copyright (C) 2013 - Labros Asfaleia v.1.0 beta
 Author: Labros Karoyntzos 
@@ -23,9 +23,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.html.
 στην έκδοση 3 αυτής της άδειας.
 Το παρόν σχόλιο πρέπει να παραμένει ως έχει ώστε να τηρείται η παραπάνω άδεια κατά τη διανομή.
 */
-?>
 
-<?php
 //Ελεγχος εκτελεσης
-if(!defined('INCLUDE_CHECK')) die('Το αρχείο δεν εκτελείται μόνο του παρά μόνο ενσωματωμένο στο υπόλοιπο λογισμικό');
+if(!defined('INCLUDE_CHECK')){die('Το αρχείο δεν εκτελείται μόνο του παρά μόνο ενσωματωμένο στο υπόλοιπο λογισμικό');}
 ?>

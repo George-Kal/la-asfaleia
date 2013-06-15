@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 Copyright (C) 2013 - Labros Asfaleia v.1.0 beta
 Author: Labros Karoyntzos 
@@ -23,18 +23,17 @@ along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.html.
 στην έκδοση 3 αυτής της άδειας.
 Το παρόν σχόλιο πρέπει να παραμένει ως έχει ώστε να τηρείται η παραπάνω άδεια κατά τη διανομή.
 */
-?>
-
-<?php
 
 require("include_check.php");
 
+
 session_name('asfaleiaLogin');
 // Το cookie έχει διάρκεια 2 εβδομάδων
-session_set_cookie_params(2*7*24*60*60, "localhost/la-asfaleia");
+session_set_cookie_params(2*7*24*60*60);
 
 // Αρχή συνεδρίας
 session_start();
+
 
 
 function logged_in() {

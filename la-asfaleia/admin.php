@@ -24,7 +24,6 @@ along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.html.
 Το παρόν σχόλιο πρέπει να παραμένει ως έχει ώστε να τηρείται η παραπάνω άδεια κατά τη διανομή.
 */
 ?>
-
 <?php
 //Να εμφανίζονται τα λάθη για να βλέπω τι συμβαίνει - ΟΣΟ ΔΙΑΡΚΕΙ ΤΟ DEVELOPMENT
 ini_set('display_errors',1); 

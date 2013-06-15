@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /* 
 jTable 1.5.1
 http://www.jtable.org

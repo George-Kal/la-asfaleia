@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 Copyright (C) 2013 - Labros Asfaleia v.1.0 beta
 Author: Labros Karoyntzos 
@@ -23,9 +23,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.html.
 στην έκδοση 3 αυτής της άδειας.
 Το παρόν σχόλιο πρέπει να παραμένει ως έχει ώστε να τηρείται η παραπάνω άδεια κατά τη διανομή.
 */
-?>
 
-<?php
 include ('include_check.php');
 // Για τη βάση δεδομένων
 define("DB_SERVER", "localhost"); //το όνομα του διακομιστή.Για xampp,mamp κλπ χρησιμοποιείστε localhost

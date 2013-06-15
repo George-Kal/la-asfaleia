@@ -23,12 +23,10 @@ along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.html.
 στην έκδοση 3 αυτής της άδειας.
 Το παρόν σχόλιο πρέπει να παραμένει ως έχει ώστε να τηρείται η παραπάνω άδεια κατά τη διανομή.
 */
-?>
 
-<?php
 define('INCLUDE_CHECK',true);
-require_once('/tcpdf/config/tcpdf_config.php');
-require_once('/tcpdf/tcpdf.php');
+require_once('tcpdf/config/tcpdf_config.php');
+require_once('tcpdf/tcpdf.php');
 require("connection.php");
 require("session.php");
 require("medoo.php");

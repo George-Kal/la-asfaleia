@@ -23,9 +23,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.html.
 στην έκδοση 3 αυτής της άδειας.
 Το παρόν σχόλιο πρέπει να παραμένει ως έχει ώστε να τηρείται η παραπάνω άδεια κατά τη διανομή.
 */
-?>
 
-<?php
 //Το αρχείο δεν εκτελείται μόνο του
 require("include_check.php");
 $script = '';
@@ -136,7 +134,7 @@ else if(isset($_POST['submit']) AND $_POST['submit']=='Register')
 							
 						)");
 		
-		if(mysql_affected_rows($link)==1)
+		if(mysql_affected_rows($connection)==1)
 		{
 			send_mail(	'la123@otenet.gr',
 						$_POST['email'],
