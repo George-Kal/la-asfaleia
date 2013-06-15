@@ -286,7 +286,7 @@ function count_ktiria(){
 	$database = new medoo(DB_NAME);
 	$db_table = "meleti_ktiria";
 	$db_columns = "*";
-	$db_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"id" => $_SESSION['meleti_id']));
+	$db_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id']));
 	$count_ktiria = $database->count($db_table, $db_parameters);
 	
 	return $count_ktiria;
