@@ -594,7 +594,7 @@ DROP TABLE IF EXISTS `library_teyxos`;
 CREATE TABLE IF NOT EXISTS `library_teyxos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `kefalaio` int(11) NOT NULL,
-  `text` text NOT NULL,
+  `text` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
@@ -933,7 +933,7 @@ CREATE TABLE IF NOT EXISTS `meleti_teyxos` (
   `user_id` int(11) NOT NULL,
   `meleti_id` int(11) NOT NULL,
   `kefalaio` int(11) NOT NULL,
-  `text` text NOT NULL,
+  `text` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=51 ;
 
