@@ -146,7 +146,7 @@ windows, linux, mac ακόμη και android.<br/><br/>
 </ul>
 <span class="label label-success">Μηχανικοί</span><br/>
 <ul>
-<li>Κώστας Διδόνης<br/>
+<li>Κώστας Διδώνης<br/>
 Έδωσε ιδέες για το αρχικό "στήσιμο" του λογισμικού σε server καθώς και ιδέες για την λειτουργικότητα.</li>
 </ul>
 <span class="label label-Info">Κείμενα</span><br/>
