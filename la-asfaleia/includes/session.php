@@ -60,9 +60,7 @@ function confirm_admin() {
 	if ($_SESSION['username']==APPLICATION_ADMIN AND $_SESSION['user_id']==APPLICATION_ADMIN_ID) {
 		return true;
 	}else{
-	echo "Η ενέργεια απαιτεί δικαιώματα διαχειριστή. <br/>
-	Πιθανότατα βρίσκεστε εδώ από λάθος. Συνδεθείτε σαν διαχειριστής.";
-	die;
+		return false;
 	}
 }
 ?>
