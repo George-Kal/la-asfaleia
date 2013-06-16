@@ -295,7 +295,11 @@ require("include_check.php");
 				var id = points[i][0];
 				var name = points[i][1];
 				var perigrafi = points[i][2];
+				if(points[i][3]-1>0){
 				var type = categories[points[i][3]-1][1];
+				}else{
+				var type=0;
+				}
 				var address = points[i][4];
 				var lat = points[i][5];
 				var lon = points[i][6];
