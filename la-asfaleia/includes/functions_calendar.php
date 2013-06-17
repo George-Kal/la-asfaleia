@@ -143,6 +143,7 @@ function draw_calendar($year, $pinakas){
 				$count_gegonota = $database->count($db_table, $db_parameters);
 				
 				foreach($data_gegonota as $data){
+				if($data["meleti_id"]==$_SESSION['meleti_id']){$calendar.= "<font color=\"red\">";}
 					$timestamp_day = $year."-".$z."-".$list_day;
 					//Μόνο τα γεγονότα πριν τη λήξη
 					if (strtotime($timestamp_day)<=strtotime($data["date_end"]) AND strtotime($timestamp_day)>=strtotime($data["date_start"])){
@@ -161,6 +162,7 @@ function draw_calendar($year, $pinakas){
 					$calendar.= $data_ktirio[0]["name"];
 
 					$calendar.= "<br/><br/>";
+				if($data["meleti_id"]==$_SESSION['meleti_id']){$calendar.= "</font>";}
 					}
 				}
 				
@@ -317,9 +319,13 @@ function elaxistes_wres(){
 	$select_typemeleti = $database->select("meletes",$db_columns,array("AND"=>array("user_id"=>$_SESSION['user_id'],"id"=>$_SESSION['meleti_id'])) );
 	$typemeleti = $select_typemeleti[0]["type"];
 	
+	if($typemeleti>0){
 	//Επιλογή της κατηγορίας της επιχείρησης (Α,Β,Γ)
 	$select_catmeleti = $database->select("library_industry_cat",$db_columns,array("id"=>$typemeleti) );
 	$catmeleti = $select_catmeleti[0]["cat"];
+	}else{
+	$catmeleti = 1;
+	}
 	
 	//Επιλογή του αριθμού των εργαζομένων της επιχείρησης
 	$ergazomenoi = count_ergazomenoi();
@@ -460,12 +466,15 @@ function programma_wres(){
 	$minutes_ie = 0;
 	$emfaniseis_ta = 0;
 	$emfaniseis_ie = 0;
+	$minutes_ta_year = 0;
+	$minutes_ie_year = 0;
 	
 	foreach($select_prog_ta as $prog_ta){
 	$minutes_ta_per_month = (strtotime($prog_ta["time_end"])-strtotime($prog_ta["time_start"]))/60;
 	$apotelesmata_ta = get_emfaniseis($prog_ta["id"], "meleti_programma_ta");
 	$minutes_ta += $apotelesmata_ta[1];
 	$emfaniseis_ta += $apotelesmata_ta[0];
+	$minutes_ta_year += $minutes_ta_per_month*12;
 	}
 	
 	foreach($select_prog_ie as $prog_ie){
@@ -473,12 +482,17 @@ function programma_wres(){
 	$apotelesmata_ie = get_emfaniseis($prog_ie["id"], "meleti_programma_ie");
 	$minutes_ie += $apotelesmata_ie[1];
 	$emfaniseis_ie += $apotelesmata_ie[0];
+	$minutes_ie_year += $minutes_ie_per_month*12;
 	}
 	
 	$hours_ta = convertToHoursMins($minutes_ta);
 	$hours_ie = convertToHoursMins($minutes_ie);
+	
+	//Οι συνολικές ώρες ανά έτος
+	$hours_ta_year = convertToHoursMins($minutes_ta_year);
+	$hours_ie_year = convertToHoursMins($minutes_ie_year);
 
-return array ($hours_ta,$hours_ie);
+return array ($hours_ta_year,$hours_ie_year,$hours_ta,$hours_ie);
 }
 
 //Εύρεση των ωρών βάση προγράμματος σε ένα συγκεκριμένο κτίριο
@@ -493,12 +507,15 @@ function programma_wres_ktirio($ktirio_id){
 	$minutes_ie = 0;
 	$emfaniseis_ta = 0;
 	$emfaniseis_ie = 0;
+	$minutes_ta_year = 0;
+	$minutes_ie_year = 0;
 	
 	foreach($select_prog_ta as $prog_ta){
 	$minutes_ta_per_month = (strtotime($prog_ta["time_end"])-strtotime($prog_ta["time_start"]))/60;
 	$apotelesmata_ta = get_emfaniseis($prog_ta["id"], "meleti_programma_ta");
 	$minutes_ta += $apotelesmata_ta[1];
 	$emfaniseis_ta += $apotelesmata_ta[0];
+	$minutes_ta_year += $minutes_ta_per_month*12;
 	}
 	
 	foreach($select_prog_ie as $prog_ie){
@@ -506,12 +523,17 @@ function programma_wres_ktirio($ktirio_id){
 	$apotelesmata_ie = get_emfaniseis($prog_ie["id"], "meleti_programma_ie");
 	$minutes_ie += $apotelesmata_ie[1];
 	$emfaniseis_ie += $apotelesmata_ie[0];
+	$minutes_ie_year += $minutes_ie_per_month*12;
 	}
 	
 	$hours_ta = convertToHoursMins($minutes_ta);
 	$hours_ie = convertToHoursMins($minutes_ie);
+	
+	//Οι συνολικές ώρες ανά έτος
+	$hours_ta_year = convertToHoursMins($minutes_ta_year);
+	$hours_ie_year = convertToHoursMins($minutes_ie_year);
 
-return array ($hours_ta,$hours_ie);
+return array ($hours_ta_year,$hours_ie_year,$hours_ta,$hours_ie);
 }
 
 
@@ -527,12 +549,15 @@ function programma_wres_full(){
 	$minutes_ie = 0;
 	$emfaniseis_ta = 0;
 	$emfaniseis_ie = 0;
+	$minutes_ta_year = 0;
+	$minutes_ie_year = 0;
 	
 	foreach($select_prog_ta as $prog_ta){
 	$minutes_ta_per_month = (strtotime($prog_ta["time_end"])-strtotime($prog_ta["time_start"]))/60;
 	$apotelesmata_ta = get_emfaniseis($prog_ta["id"], "meleti_programma_ta");
 	$minutes_ta += $apotelesmata_ta[1];
 	$emfaniseis_ta += $apotelesmata_ta[0];
+	$minutes_ta_year += $minutes_ta_per_month*12;
 	}
 	
 	foreach($select_prog_ie as $prog_ie){
@@ -540,12 +565,19 @@ function programma_wres_full(){
 	$apotelesmata_ie = get_emfaniseis($prog_ie["id"], "meleti_programma_ie");
 	$minutes_ie += $apotelesmata_ie[1];
 	$emfaniseis_ie += $apotelesmata_ie[0];
+	$minutes_ie_year += $minutes_ie_per_month*12;
 	}
 	
+	
+	//Οι συνολικές ώρες σε όλες τις χρονιές
 	$hours_ta = convertToHoursMins($minutes_ta);
 	$hours_ie = convertToHoursMins($minutes_ie);
+	
+	//Οι συνολικές ώρες ανά έτος
+	$hours_ta_year = convertToHoursMins($minutes_ta_year);
+	$hours_ie_year = convertToHoursMins($minutes_ie_year);
 
-return array ($hours_ta,$hours_ie);
+return array ($hours_ta_year,$hours_ie_year,$hours_ta,$hours_ie);
 }
 
 ?>
