@@ -59,7 +59,7 @@ include("includes/forms_admin.php");
 
 //πρόσβαση στο αρχείο μόνο για συνδεδεμένους χρήστες και μόνο για το διαχειριστή
 confirm_logged_in();
-confirm_admin();
+die_if_not_admin();
 
 //το header της σελίδας
 include("includes/header_admin.php");
