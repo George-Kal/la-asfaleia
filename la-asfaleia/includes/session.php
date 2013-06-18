@@ -63,4 +63,11 @@ function confirm_admin() {
 		return false;
 	}
 }
+function die_if_not_admin() {
+	if ($_SESSION['username']==APPLICATION_ADMIN AND $_SESSION['user_id']==APPLICATION_ADMIN_ID) {
+		return true;
+	}else{
+		die;
+	}
+}
 ?>
