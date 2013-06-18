@@ -28,6 +28,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.html.
 require("include_check.php");
 $script = '';
 
+//Έλεγχος μήπως επανεκκινήθηκε ο browser και δεν υπάρχει το "να με θυμάσαι" cookie
 if(isset($_SESSION['user_id']) && !isset($_COOKIE['asfaleiaRemember']) && !$_SESSION['rememberMe'])
 {
 	// Εάν ο χρήστης είναι συνδεδεμένος, αλλά δεν υπάρχει το asfaleiaRemember cookie (πχ επανεκιννήθηκε ο browser)
@@ -39,6 +40,7 @@ if(isset($_SESSION['user_id']) && !isset($_COOKIE['asfaleiaRemember']) && !$_SES
 	
 }
 
+//Φόρμα για logout
 if(isset($_GET['logoff']))
 {
 	$_SESSION = array();
@@ -48,37 +50,105 @@ if(isset($_GET['logoff']))
 	exit;
 }
 
-if(isset($_POST['submit']) AND $_POST['submit']=='Login')
-{
-	// Checking whether the Login form has been submitted
+//Φόρμα για σύνδεση
+if(isset($_POST['submit']) AND $_POST['submit']=='Login'){
 	
 	$err = array();
-	// Will hold our errors
+	//Κρατάει τα λάθη
 	
 	
-	if(!$_POST['username'] || !$_POST['password'])
+	if(!$_POST['username'] || !$_POST['password']){
 		$err[] = 'Λείπει το όνομα χρήστη ή/και ο κωδικός!';
-	
-	if(!count($err))
-	{
+	}
+	if(!count($err)){
+		//Έλεγχος πριν την είσοδο στη βάση
 		$_POST['username'] = mysql_real_escape_string($_POST['username']);
 		$_POST['password'] = mysql_real_escape_string($_POST['password']);
 		$_POST['rememberMe'] = (int)$_POST['rememberMe'];
 		
-		// Escaping all input data
-		
-		
-		$row = mysql_fetch_assoc(mysql_query("SELECT id,usr FROM users WHERE usr='{$_POST['username']}' AND pass='".md5($_POST['password'])."'"));
+		//Αυτή η γραμμή ελέγχει το χρήστη στη βάση δεδομένων
+		//Για τη σύνδεση σε ήδη υπάρχουσες βάσεις δεδομένων με χρήστες μπορεί να γίνει το εξής:
+		//1.Να ελέγχεται ο χρήστης στην βάση του la-asfaleia για αρχή. 
+		//2.Εάν βρεθεί στη βάση του la-asfaleia να προχωράμε με το login
+		//3.Εάν δεν βρεθεί να ελέγχεται ο χρήστης στην άλλη βάση. 
+		//4.Εάν βρεθεί στην άλλη βάση να δημιουργείται μια γραμμή στον πίνακα users του la-asfaleia και να επανελέγχεται ο χρήστης στο la-asfaleia (οπότε θα προχωράει και με το login)
+		//Αυτός ο τρόπος ευννοεί την ασφάλεια. Καθώς οι χρήστες κρατώνται μόνο στο la-asfaleia χωρίς να "κινδυνεύει" η λίστα χρηστών και οι ρυθμίσεις τους στην άλλη βάση. 
+		//ΣΗΜΕΙΩΣΗ: Στο la-asfaleia όπως φαίνεται παρακάτω οι κωδικοί αποθηκεύονται με md5()
+		$database = new medoo(DB_NAME);
 
-		if($row['usr']){
-			//Εάν βρεθεί η γραμμή υπάρχει ο χρήστης και ορίζω ότι επιστρέφει από τη βάση στο session cookie
-			$_SESSION['username']=$row['usr'];
-			$_SESSION['user_id'] = $row['id'];
+		$user_table = "users";
+		$where_parameters = array("AND"=>array ("usr" => $_POST['username'],"pass"=>md5($_POST['password']) ));
+		$select_user = $database->select($user_table,"*",$where_parameters);
+		
+		//Πρέπει να επιστρέφει 1.
+		$count_user = $database->count($user_table, $where_parameters);
+		
+		//Δεν βρέθηκε ο χρήστης
+		if($count_user==0){
+		
+		}
+
+		//Εάν βρεθεί η γραμμή υπάρχει ο χρήστης και ορίζω ότι επιστρέφει η βάση στο session cookie
+		if($select_user[0]["usr"]){
+			$_SESSION['username']=$select_user[0]["usr"];
+			$_SESSION['user_id'] = $select_user[0]["id"];
 			$_SESSION['rememberMe'] = $_POST['rememberMe'];
 			
 			//Ορίζω δεδομένα στο cookie asfaleiaRemember
 			setcookie('asfaleiaRemember',$_POST['rememberMe']);
-		}else{
+		}
+		
+		/*
+		//--------------------------------------------------------------------------------------------------------------
+		//Εάν υπάρχει και άλλος πίνακας για να ψάξει το λογισμικό χρήστες (phpbb) αφαιρέστε από τα σχόλια το παρακάτω if
+		//και διορθώστε ανάλογα τον πίνακα και τη διαδρομή για το phpbb
+		//Δεν βρέθηκε η γραμμή στον πίνακα χρηστών του la-asfaleia. Ελέγχω στον άλλο πίνακα (χρήστες του phpbb3)
+		
+		$database_phpbb = "DATABASE_PHPBB"; //Προσθέστε εδώ τη βάση δεδομένων του phpbb
+		$userstable_phpbb = "USERSTABLE_PHPBB"; //Προσθέστε εδώ τον πίνακα για τους χρήστες στο phpbb (συνήθως phpbb_users)
+		$folder_phpbb = "DIADROMI_PHPBB"; //Προσθέστε εδώ τη σχετική διαδρομή του phpbb σε σχέση με το la-asfaleia (πχ εάν στο root υπάρχει ένας φάκελος για το ασφάλεια και ένας φάκελος για το phpbb3 προσθέστε ../phpbb3/)
+		
+		if(!$select_user[0]["usr"]){
+			//Η βάση δεδομένων του phpbb
+			$database_bb = new medoo($database_phpbb);
+			
+			//Επιλέγω τη γραμμή με το χρήστη από το phpbb
+			$where_parameters_bb = array ("username" => $_POST['username']);
+			$select_user_bb = $database_bb->select($userstable_phpbb,"*",$where_parameters_bb);
+			
+			//Εάν βρεθεί ο χρήστης στον πίνακα users του phpbb
+			if($select_user_bb[0]["username"]){
+				
+				//Ελέγχω αν είναι ίδιος ο κωδικός χρησιμοποιώντας τις εγγενείς function του phpbb.Αυτό γιατί ο κωδικός γίνεται hash εκεί όχι με απλό md5()
+				define('IN_PHPBB', true);
+				$phpbb_root_path = $folder_phpbb;
+				$phpEx = substr(strrchr(__FILE__, '.'), 1);
+				include($phpbb_root_path . 'common.' . $phpEx);
+				
+				if (phpbb_check_hash($_POST['password'], $select_user_bb[0]["user_password"])){
+				$err[]='Ταυτοποιήθηκε ο χρήστης στο forum. Τώρα μπορείτε να συνδέεστε και εδώ με τον ίδια στοιχεία.';
+				$insert_parameters = array("usr"=>$select_user_bb[0]["username"],"pass"=>md5($_POST['password']) );
+			
+				//Προσθήκη του χρήστη στη βάση του la-asfaleia
+				$insert_user = $database->insert($user_table,$insert_parameters);
+				
+				//Επανέλεγχος στη βάση του la-asfaleia αν υπάρχει ο χρήστης (για να δω αν έγινε σωστά η προσθήκη)
+				$select_user = $database->select($user_table,"*",$where_parameters);
+					if($select_user[0]["usr"]){
+						$_SESSION['username']=$select_user[0]["usr"];
+						$_SESSION['user_id'] = $select_user[0]["id"];
+						$_SESSION['rememberMe'] = $_POST['rememberMe'];
+						
+						//Ορίζω δεδομένα στο cookie asfaleiaRemember
+						setcookie('asfaleiaRemember',$_POST['rememberMe']);
+					}
+				}//Έλεγχος κωδικού στο phpbb
+			}//Βρέθηκε ο χρήστης στο phpbb
+		}//Δεν βρέθηκε ο χρήστης στο la-asfaleia
+		//-------------------------------------------------------------------------------------------------------------------
+		*/
+		
+		if(!$select_user[0]["usr"] AND !$select_user_bb[0]["username"]){
 		$err[]='Λάθος όνομα χρήστη ή/και κωδικός! Προσπαθήστε ξανά';
 		}
 	}
@@ -90,6 +160,7 @@ if(isset($_POST['submit']) AND $_POST['submit']=='Login')
 	header("Location: index.php?nav=user_login");
 	exit;
 }
+//Φόρμα για εγγραφή
 else if(isset($_POST['submit']) AND $_POST['submit']=='Register')
 {
 	//Υποβλήθηκε η φόρμα για εγγραφή
