@@ -64,9 +64,9 @@ function confirm_admin() {
 	}
 }
 function die_if_not_admin() {
-	if ($_SESSION['username']==APPLICATION_ADMIN AND $_SESSION['user_id']==APPLICATION_ADMIN_ID) {
-		return true;
-	}else{
+	if (!confirm_admin()) {
+		echo "This action requires administration rights. <br/>
+		Connect as an admin or leave this page.";
 		die;
 	}
 }
