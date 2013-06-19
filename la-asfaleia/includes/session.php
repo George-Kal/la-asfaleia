@@ -66,9 +66,7 @@ function confirm_admin() {
 
 function die_if_not_admin() {
 	if (!confirm_admin()) {
-		echo "This action requires administration rights. <br/>
-		Connect as an admin or leave this page.";
-		die;
+		redirect_to("index.php?nav=user_login");
 	}
 }
 ?>
