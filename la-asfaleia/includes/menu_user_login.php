@@ -77,7 +77,13 @@ require("include_check.php");
 			}
 			
 		}else{//Ο χρήστης είναι συνδεδεμένος
-		
+				
+				if(isset($_SESSION['msg']['login-err'])){
+				echo "<div class=\"alert alert-success\">
+				<button type=\"button\" class=\"close\" data-dismiss=\"alert\">&times;</button>
+				<strong>Συγχαρητήρια!</strong>".$_SESSION['msg']['login-err']."</div>";
+				unset($_SESSION['msg']['login-err']);
+				}
 			
 			$db_table = "meletes";
 			$db_columns = array ("id","user_id","name","perigrafi","toponymio","address","type","lat","lon");
@@ -280,8 +286,8 @@ require("include_check.php");
 			
 			
 			var map = new google.maps.Map(document.getElementById('mapCanvas'), {
-			  zoom: 6,
-			  center: new google.maps.LatLng(39, 22),
+			  zoom: 11,
+			  center: new google.maps.LatLng(37.56, 22.8),
 			  mapTypeId: google.maps.MapTypeId.ROADMAP
 			});
 
@@ -306,19 +312,20 @@ require("include_check.php");
 				html[i] = "<b>Meleti_id:</b>"+id+"<br/>" + "<b>Μελέτη:</b>"+name+"<br/>" + "<b>Περιγραφή:</b>"+perigrafi+"<br/>" + "<b>Τύπος:</b>"+type+"<br/>" +
 				"<b>Διεύθυνση:</b>"+address+"<br/>" + "<b>lat:</b>"+lat+"<br/>" + "<b>lon:</b>"+lon+"<br/>";
 			
-			var myLatLng = 	new google.maps.LatLng(lat, lon);
 
-			  marker = new google.maps.Marker({
-				position: myLatLng,
-				map: map
-			  });
+				var myLatLng = 	new google.maps.LatLng(lat, lon);
 
-			  google.maps.event.addListener(marker, 'mouseover', (function(marker, i) {
-				return function() {
-				  infowindow.setContent(html[i]);
-				  infowindow.open(map, marker);
-				}
-			  })(marker, i));
+				  marker = new google.maps.Marker({
+					position: myLatLng,
+					map: map
+				  });
+
+				  google.maps.event.addListener(marker, 'click', (function(marker, i) {
+					return function() {
+					  infowindow.setContent(html[i]);
+					  infowindow.open(map, marker);
+					}
+				  })(marker, i));
 
 			}
 			</script>

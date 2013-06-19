@@ -52,7 +52,6 @@ require("includes/functions_epikindynotita.php");
 require("includes/functions_qa.php");
 require("includes/functions_vivliothikes.php");
 
-
 include("includes/forms_user.php");
 
 //Όλη η εφαρμογή βρίσκεται στο αρχείο index.php

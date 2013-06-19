@@ -22,6 +22,13 @@ along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.html.
 όρους της άδειας GNU General Public License όπως δίδεται από το Free Software Foundation
 στην έκδοση 3 αυτής της άδειας.
 Το παρόν σχόλιο πρέπει να παραμένει ως έχει ώστε να τηρείται η παραπάνω άδεια κατά τη διανομή.
+
+***********************************************************************
+Tsak mods - Κώστας Τσακίρης - πολιτικός μηχανικός - ktsaki@tee.gr     *
+                                                                      *
+Τροποποίηση ημερολογίων. Εμφάνιση ανά μήνα			                  *
+                                                                      *
+***********************************************************************
 */
 
 require("include_check.php");
@@ -206,15 +213,58 @@ confirm_logged_in();
 			
 			<div id="tabs-2"> 
 			Ανανεώστε τη σελίδα σε κάθε αλλαγή στην καρτέλα "ωράριο εργασίας" ώστε να επαναφορτωθεί το πρόγραμμα του Τεχνικού ασφαλείας.<br/>
+			<div id="meleti_programma_ta0"></div>
+			<script>
+				month_ta=1;
+				month_ie=1;
+				function get_calendar(pinakas,month){
+				var d = new Date();
+				var year = d.getFullYear();
+				//AJAX call
+				var xmlhttp=new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function()  {
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					document.getElementById(pinakas+'0').innerHTML=xmlhttp.responseText;
+				}}
+				xmlhttp.open("GET","includes/functions_calendar.php?year="+year+"&pinakas="+pinakas+"&month="+month,true);
+				xmlhttp.send();
+				}
+				function next_month_meleti_programma_ta(){
+					month_ta += 1;
+					if (month_ta>12)month_ta=1;
+					get_calendar("meleti_programma_ta",month_ta);
+				}
+				function prev_month_meleti_programma_ta(){
+					month_ta -= 1;
+					if (month_ta<1)month_ta=12;
+					get_calendar("meleti_programma_ta",month_ta);
+				}
+				function next_month_meleti_programma_ie(){
+					month_ie += 1;
+					if (month_ie>12)month_ie=1;
+					get_calendar("meleti_programma_ie",month_ie);
+				}
+				function prev_month_meleti_programma_ie(){
+					month_ie -= 1;
+					if (month_ie<1)month_ie=12;
+					get_calendar("meleti_programma_ie",month_ie);
+				}
+				get_calendar("meleti_programma_ta",1);
+			</script>
 			<?php
-			$trexon_y = date("Y");
-			echo draw_calendar($trexon_y,"meleti_programma_ta");
+//			$trexon_y = date("Y");
+//			draw_calendar($trexon_y,"meleti_programma_ta",1);
 			?>
 			</div>
+			
 			<div id="tabs-3">
 			Ανανεώστε τη σελίδα σε κάθε αλλαγή στην καρτέλα "ωράριο εργασίας" ώστε να επαναφορτωθεί το πρόγραμμα του Ιατρού εργασίας.<br/>
+			<div id="meleti_programma_ie0"></div>
+			<script>
+				get_calendar("meleti_programma_ie",1);
+			</script>
 			<?php
-			echo draw_calendar($trexon_y,"meleti_programma_ie");
+//			draw_calendar($trexon_y,"meleti_programma_ie",1);
 			?>
 			</div>
 			

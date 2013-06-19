@@ -51,12 +51,6 @@ require("include_check.php");
 	<script type="text/javascript" src="javascripts/main.js" /></script>
 	
     
-    <!-- PNG FIX for IE6 -->
-    <!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
-    <!--[if lte IE 6]>
-        <script type="text/javascript" src="login_panel/js/pngfix/supersleight-min.js"></script>
-    <![endif]-->
-    
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 	 <style>
 	.ui-tabs-vertical { width: 99%; }

@@ -50,6 +50,15 @@ require("include_check.php");
 <br/><br/>
 <a href="#peri_popup" role="button" class="btn" data-toggle="modal">Περί...</a>
 <a href="#contributors_popup" role="button" class="btn" data-toggle="modal">Συντελεστές</a>
+<script type="text/javascript">
+// Popup window code
+function newPopup(url) {
+	popupWindow = window.open(
+		url,'popUpWindow','height=600,width=800,left=10,top=10,resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,directories=no,status=yes')
+}
+</script>
+<a href="JavaScript:newPopup('../chat2/');" role="button" class="btn">Chat with users</a>
+
 
 <!-- ###################### Κρυφό peri_popup για εμφάνιση ###################### -->
 <div id="peri_popup" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

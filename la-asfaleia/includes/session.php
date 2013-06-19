@@ -63,6 +63,7 @@ function confirm_admin() {
 		return false;
 	}
 }
+
 function die_if_not_admin() {
 	if (!confirm_admin()) {
 		echo "This action requires administration rights. <br/>

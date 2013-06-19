@@ -22,7 +22,25 @@ along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.html.
 όρους της άδειας GNU General Public License όπως δίδεται από το Free Software Foundation
 στην έκδοση 3 αυτής της άδειας.
 Το παρόν σχόλιο πρέπει να παραμένει ως έχει ώστε να τηρείται η παραπάνω άδεια κατά τη διανομή.
+
+***********************************************************************
+Tsak mods - Κώστας Τσακίρης - πολιτικός μηχανικός - ktsaki@tee.gr     *
+                                                                      *
+Τροποποίηση draw_calendar() στην draw_calendar_month().               *
+                                                                      *
+***********************************************************************
 */
+
+if (isset($_GET['year'])){
+define('INCLUDE_CHECK',true);
+require("medoo.php");
+require("session.php");
+$year=$_GET["year"];
+$pinakas=$_GET["pinakas"];
+$month=$_GET["month"];
+draw_calendar_month($year, $pinakas, $month);
+exit;
+}
 
 //Το αρχείο δεν εκτελείται μόνο του
 require("include_check.php");
@@ -59,7 +77,6 @@ while (($min_date = strtotime("+1 MONTH", $min_date)) <= $max_date) {
 }
 return $i;
 }
-
 
 //Ημερολόγιο έτους για τεχνικό ασφαλείας
 //Επιστρέφει το ημερολόγιο του έτους που δηλώθηκε με τα γεγονότα από όλες τις μελέτες
@@ -215,6 +232,169 @@ function draw_calendar($year, $pinakas){
 	
 	//επιστροφή αποτελέσματος
 	return $calendar;
+}
+
+
+//Ημερολόγιο έτους για τεχνικό ασφαλείας
+//Επιστρέφει το ημερολόγιο του έτους που δηλώθηκε με τα γεγονότα από όλες τις μελέτες
+//για τον Τ.Α. (πίνακας:meleti_programma_ta) και τον Ι.Ε. (πίνακας:meleti_programma_ie)
+function draw_calendar_month($year, $pinakas, $month){
+	
+	$database = new medoo(DB_NAME);
+	//o πίνακας που περιέχει τα γεγονότα (Τ.Α. ή Ι.Ε.)
+	$db_table = $pinakas;
+	$db_columns = "*";
+	$count_prog = $database->count($db_table, array("AND"=>array("user_id"=>$_SESSION['user_id'],"meleti_id"=>$_SESSION['meleti_id'])));
+	
+	if($count_prog!=0){
+	
+	$calendar = "";
+	//Array με τους μήνες και τις ημέρες
+	$month_names = array("0","Ιανουάριος","Φεβρουάριος","Μάρτιος","Απρίλιος","Μαϊος","Ιούνιος",
+	"Ιούλιος","Αύγουστος",	"Σεπτέμβριος","Οκτώβριος","Νοέμβριος","Δεκέμβριος");
+	$day_names = array('Κυριακή','Δευτέρα','Τρίτη','Τετάρτη','Πέμπτη','Παρασκευή','Σάββατο');
+	
+	//Για τους 12 μήνες
+//	for ($z=1; $z<=12; $z++){
+	$z = $month;
+	//Εισαγωγικό κείμενο που δείχνει το μήνα και το χρόνο πριν τον πίνακα
+	$calendar .= "<table><tr><td style='width:200px;'>";
+	$calendar .= "<h2>".$month_names[$z]." ".$year."</h2></td><td>";
+	$calendar .= "<img src='images/previous.png' style='width:29px;height:32px;cursor:pointer;' onclick='prev_month_".$pinakas."();'></img></td><td>";
+	$calendar .= "<img src='images/next.png' style='width:29px;height:32px;cursor:pointer;' onclick='next_month_".$pinakas."();'></img></td></tr></table>";
+
+	//αρχή πίνακα
+	$calendar .= '<table border="1" cellpadding="0" cellspacing="0" class="calendar">';
+	$calendar .= '<tbody>';
+	
+	//γραμμή τίτλων πίνακα
+	$calendar.= '<tr class="calendar-row"><td class="calendar-day-head">'.implode('</td><td class="calendar-day-head">',$day_names).'</td></tr>';
+
+	//μεταβλητές για αντιπροσωπευτική μέρα, αρ. ημερών στον πίνακα, ημέρες στην τρέχουσα εβδομάδα, αρίθμηση ημερών
+	$running_day = date('w',mktime(0,0,0,$z,1,$year));
+	$days_in_month = date('t',mktime(0,0,0,$z,1,$year));
+	$days_in_this_week = 1;
+	$day_counter = 0;
+	$dates_array = array();
+	
+	$evdomada = 1;
+
+	//Αρχή πρώτης γραμμής
+	$calendar.= '<tr class="calendar-row">';
+
+	//Τα κενά κελιά του πίνακα μέχρι την πρώτη μέρα της εβδομάδας
+	for($x = 0; $x < $running_day; $x++){
+		$calendar.= '<td class="calendar-day-np"> </td>';
+		$days_in_this_week++;
+	}
+
+	//Οι υπόλοιπες μέρες
+	for($list_day = 1; $list_day <= $days_in_month; $list_day++){
+
+			//Η πρώτη Δευτέρα, Τρίτη, Τετάρτη...
+			if($list_day>=1 AND $list_day<=7){
+			$evdomada = 1;
+			}
+			//Η δεύτερη Δευτέρα, Τρίτη, Τετάρτη...
+			if($list_day>7 AND $list_day<=14){
+			$evdomada = 2;
+			}
+			//Η τρίτη Δευτέρα, Τρίτη, Τετάρτη...
+			if($list_day>14 AND $list_day<=21){
+			$evdomada = 3;
+			}
+			//Η τέταρτη Δευτέρα, Τρίτη, Τετάρτη...
+			if($list_day>21 AND $list_day<=28){
+			$evdomada = 4;
+			}
+			//Η πέμπτη (αν υπάρχει) Δευτέρα, Τρίτη, Τετάρτη...
+			if($list_day>28 AND $list_day<=31){
+			$evdomada = 5;
+			}
+		
+			$calendar.= '<td class="calendar-day">';
+			//Ο αριθμός της μέρας του μήνα
+			$calendar.= '<div class="day-number">'.$list_day.'</div>';
+			
+				//ευρεση των γεγονότων για τη μέρα από τη βάση
+				$db_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"day" => $running_day,"kathe" => $evdomada));
+				$data_gegonota = $database->select($db_table,$db_columns,$db_parameters);
+				$count_gegonota = $database->count($db_table, $db_parameters);
+				
+				foreach($data_gegonota as $data){
+				if($data["meleti_id"]==$_SESSION['meleti_id']){$calendar.= "<font color=\"red\">";}
+					$timestamp_day = $year."-".$z."-".$list_day;
+					//Μόνο τα γεγονότα πριν τη λήξη
+					if (strtotime($timestamp_day)<=strtotime($data["date_end"]) AND strtotime($timestamp_day)>=strtotime($data["date_start"])){
+					//Το ωριαίο πρόγραμμα
+					//$hours = (strtotime($data["time_end"])-strtotime($data["time_start"]))/3600;
+					$minutes = (strtotime($data["time_end"])-strtotime($data["time_start"]))/60;
+					$hoursmin = convertToHoursMins($minutes);
+					$calendar.= $data["time_start"]." - ".$data["time_end"]." (".$hoursmin.")<br/>";
+					
+					//Το όνομα της μελέτης (Άρα και της επιχείρησης)
+					$data_meleti = $database->select("meletes","*",array("AND" => array("user_id" => $_SESSION['user_id'],"id" => $data['meleti_id'])));
+					$calendar.= $data_meleti[0]["name"]." - ";
+					
+					//Σε ποιό υποκατάστημα
+					$data_ktirio = $database->select("meleti_ktiria","*",array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $data['meleti_id'],"id" => $data['ktirio_id'])));
+					$calendar.= $data_ktirio[0]["name"];
+
+					$calendar.= "<br/><br/>";
+				if($data["meleti_id"]==$_SESSION['meleti_id']){$calendar.= "</font>";}
+					}
+				}
+				
+			
+			
+			$calendar.= str_repeat('<p> </p>',2);
+			
+		$calendar.= '</td>';
+		if($running_day == 6){
+			$calendar.= '</tr>';
+			if(($day_counter+1) <= $days_in_month){
+				$calendar.= '<tr class="calendar-row">';
+			}
+			$running_day = -1;
+			$days_in_this_week = 0;
+		}
+		$days_in_this_week++; $running_day++; $day_counter++;
+	}
+
+	//Τα τελευταία κελιά της τελευταίας γραμμής συμπληρώνονται κενά
+	if($days_in_this_week < 8){
+		for($x = 1; $x <= (8 - $days_in_this_week); $x++){
+			$calendar.= '<td class="calendar-day-np"> </td>';
+		}
+	}
+
+	//τελευταία γραμμή
+	$calendar.= '</tr>';
+	//τέλος πίνακα
+	$calendar .= '</tbody>';
+	$calendar.= '</table>';
+	//Απαιτείται στο τεύχος για να αλλάζει σελίδα
+	$calendar .= "<p style=\"page-break-before:always;\">&nbsp;</p>";
+//	}//επανάληψη για μήνες
+	
+	}else{//Δεν βρέθηκαν προγράμματα
+		$calendar = "<font color=\"green\">Δεν έχει οριστεί πρόγραμμα.</font><br/>";
+		
+		if($db_table=="meleti_programma_ta"){
+		$calendar .= "<font color=\"red\">Πρέπει αναγκαστικά να δηλώσετε πρόγραμμα Τ.Α.</font>";
+		}
+		if($db_table=="meleti_programma_ie"){
+		$count_ie = $database->count("meleti_ypeythinos", array("AND"=>array("user_id"=>$_SESSION['user_id'],"meleti_id"=>$_SESSION['meleti_id'],"type"=>"5")));
+			if($count_ie>0){
+			$calendar .= "<font color=\"red\">Έχετε ορίσει Ι.Ε. στους υπευθύνους. Πρέπει αναγκαστικά να προσθέσετε πρόγραμμα Ι.Ε.</font>";
+			}
+		
+		}
+	}
+	
+	//επιστροφή αποτελέσματος
+//	return $calendar;
+	echo $calendar;
 }
 
 
