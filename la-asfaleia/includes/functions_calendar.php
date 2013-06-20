@@ -30,16 +30,29 @@ Tsak mods - Κώστας Τσακίρης - πολιτικός μηχανικό�
                                                                       *
 ***********************************************************************
 */
-
+if (isset($_GET['wres'])){
+	define('INCLUDE_CHECK',true);
+	require("medoo.php");
+	require("session.php");
+	require("functions_genika.php");
+	$el_wres = elaxistes_wres();
+	$ret=$el_wres[0]."|".$el_wres[1];
+	$wres = programma_wres();
+	$ret .= "|".$wres[0]."|".$wres[1];
+	$ret .= "|".print_overlaping("meleti_programma_ta");
+	$ret .= "|".print_overlaping("meleti_programma_ie");
+	echo $ret;
+	exit;
+}
 if (isset($_GET['year'])){
-define('INCLUDE_CHECK',true);
-require("medoo.php");
-require("session.php");
-$year=$_GET["year"];
-$pinakas=$_GET["pinakas"];
-$month=$_GET["month"];
-draw_calendar_month($year, $pinakas, $month);
-exit;
+	define('INCLUDE_CHECK',true);
+	require("medoo.php");
+	require("session.php");
+	$year=$_GET["year"];
+	$pinakas=$_GET["pinakas"];
+	$month=$_GET["month"];
+	draw_calendar_month($year, $pinakas, $month);
+	exit;
 }
 
 //Το αρχείο δεν εκτελείται μόνο του
@@ -260,8 +273,11 @@ function draw_calendar_month($year, $pinakas, $month){
 	//Εισαγωγικό κείμενο που δείχνει το μήνα και το χρόνο πριν τον πίνακα
 	$calendar .= "<table><tr><td style='width:200px;'>";
 	$calendar .= "<h2>".$month_names[$z]." ".$year."</h2></td><td>";
-	$calendar .= "<img src='images/previous.png' style='width:29px;height:32px;cursor:pointer;' onclick='prev_month_".$pinakas."();'></img></td><td>";
-	$calendar .= "<img src='images/next.png' style='width:29px;height:32px;cursor:pointer;' onclick='next_month_".$pinakas."();'></img></td></tr></table>";
+	$calendar .= "<img src='images/prev1.png' style='width:30px;height:30px;cursor:pointer;' title='προηγούμενο έτος' onclick='prev_year_".$pinakas."();'></img></td><td>";
+	$calendar .= "<img src='images/prev.png' style='width:30px;height:30px;cursor:pointer;' title='προηγούμενος μήνας' onclick='prev_month_".$pinakas."();'></img></td><td>";
+	$calendar .= "<img src='images/now.png' style='width:30px;height:30px;cursor:pointer;' title='σήμερα' onclick='this_month_".$pinakas."();'></img></td><td>";
+	$calendar .= "<img src='images/next.png' style='width:30px;height:30px;cursor:pointer;' title='επόμενος μήνας' onclick='next_month_".$pinakas."();'></img></td><td>";
+	$calendar .= "<img src='images/next1.png' style='width:30px;height:30px;cursor:pointer;' title='επόμενο έτος' onclick='next_year_".$pinakas."();'></img></td></tr></table>";
 
 	//αρχή πίνακα
 	$calendar .= '<table border="1" cellpadding="0" cellspacing="0" class="calendar">';
@@ -450,8 +466,8 @@ function check_events($pinakas){
 //Εκτύπωση των προγραμμάτων Τ.Α. ή Ι.Ε. που συμπίπτουν
 function print_overlaping($pinakas){
 	$overlaping_ids = check_events($pinakas);
-	if ($pinakas=="meleti_programma_ta"){$text = "<b>Έλεγχος υπερκάληψης γεγονότων Τ.Α.:</b><br/>";}
-	if ($pinakas=="meleti_programma_ie"){$text = "<b>Έλεγχος υπερκάληψης γεγονότων Ι.Ε.:</b><br/>";}
+	if ($pinakas=="meleti_programma_ta"){$text = "<b>Έλεγχος υπερκάλυψης γεγονότων Τ.Α.:</b><br/>";}
+	if ($pinakas=="meleti_programma_ie"){$text = "<b>Έλεγχος υπερκάλυψης γεγονότων Ι.Ε.:</b><br/>";}
 
 	
 	

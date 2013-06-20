@@ -65,9 +65,9 @@ confirm_logged_in();
 			<div id="tabs">
 			<ul>
 				<li><a href="#tabs-1">Ωράριο εργασίας</a></li>
-				<li><a href="#tabs-2">Πρόγραμμα Τ.Α.</a></li>
-				<li><a href="#tabs-3">Πρόγραμμα Ι.Ε.</a></li>
-				<li><a href="#tabs-4">Ελάχιστες απαιτήσεις</a></li>
+				<li><a href="#tabs-2" onclick="get_calendar('meleti_programma_ta',year_ta,month_ta);">Πρόγραμμα Τ.Α.</a></li>
+				<li><a href="#tabs-3" onclick="get_calendar('meleti_programma_ie',year_ie,month_ie);">Πρόγραμμα Ι.Ε.</a></li>
+				<li><a href="#tabs-4" onclick="check_times();">Ελάχιστες απαιτήσεις</a></li>
 			</ul>
 			
 			<div id="tabs-1">
@@ -208,18 +208,18 @@ confirm_logged_in();
 				include('includes/jtable.php');
 				?>
 				
-				
 			</div>
 			
 			<div id="tabs-2"> 
-			Ανανεώστε τη σελίδα σε κάθε αλλαγή στην καρτέλα "ωράριο εργασίας" ώστε να επαναφορτωθεί το πρόγραμμα του Τεχνικού ασφαλείας.<br/>
+			<!--Ανανεώστε τη σελίδα σε κάθε αλλαγή στην καρτέλα "ωράριο εργασίας" ώστε να επαναφορτωθεί το πρόγραμμα του Τεχνικού ασφαλείας.<br/>-->
 			<div id="meleti_programma_ta0"></div>
 			<script>
-				month_ta=1;
-				month_ie=1;
-				function get_calendar(pinakas,month){
 				var d = new Date();
-				var year = d.getFullYear();
+				month_ta=d.getMonth();
+				month_ie=d.getMonth();
+				year_ta=d.getFullYear();
+				year_ie=d.getFullYear();
+				function get_calendar(pinakas,year,month){
 				//AJAX call
 				var xmlhttp=new XMLHttpRequest();
 				xmlhttp.onreadystatechange=function()  {
@@ -231,25 +231,53 @@ confirm_logged_in();
 				}
 				function next_month_meleti_programma_ta(){
 					month_ta += 1;
-					if (month_ta>12)month_ta=1;
-					get_calendar("meleti_programma_ta",month_ta);
+					if (month_ta>12){month_ta=1;year_ta += 1;}
+					get_calendar("meleti_programma_ta",year_ta,month_ta);
+				}
+				function next_year_meleti_programma_ta(){
+					year_ta += 1;
+					get_calendar("meleti_programma_ta",year_ta,month_ta);
 				}
 				function prev_month_meleti_programma_ta(){
 					month_ta -= 1;
-					if (month_ta<1)month_ta=12;
-					get_calendar("meleti_programma_ta",month_ta);
+					if (month_ta<1){month_ta=12;year_ta -= 1;}
+					get_calendar("meleti_programma_ta",year_ta,month_ta);
+				}
+				function prev_year_meleti_programma_ta(){
+					year_ta -= 1;
+					get_calendar("meleti_programma_ta",year_ta,month_ta);
 				}
 				function next_month_meleti_programma_ie(){
 					month_ie += 1;
-					if (month_ie>12)month_ie=1;
-					get_calendar("meleti_programma_ie",month_ie);
+					if (month_ie>12){month_ie=1;year_ie += 1;}
+					get_calendar("meleti_programma_ie",year_ie,month_ie);
+				}
+				function this_month_meleti_programma_ta(){
+					var d = new Date();
+					month_ta=d.getMonth();
+					year_ta=d.getFullYear();
+					get_calendar("meleti_programma_ta",year_ta,month_ta);
+				}
+				function this_month_meleti_programma_ie(){
+					var d = new Date();
+					month_ie=d.getMonth();
+					year_ie=d.getFullYear();
+					get_calendar("meleti_programma_ie",year_ie,month_ie);
+				}
+				function next_year_meleti_programma_ie(){
+					year_ie += 1;
+					get_calendar("meleti_programma_ie",year_ie,month_ie);
 				}
 				function prev_month_meleti_programma_ie(){
 					month_ie -= 1;
-					if (month_ie<1)month_ie=12;
-					get_calendar("meleti_programma_ie",month_ie);
+					if (month_ie<1){month_ie=12;year_ie -= 1;}
+					get_calendar("meleti_programma_ie",year_ie,month_ie);
 				}
-				get_calendar("meleti_programma_ta",1);
+				function prev_year_meleti_programma_ie(){
+					year_ie -= 1;
+					get_calendar("meleti_programma_ie",year_ie,month_ie);
+				}
+				get_calendar("meleti_programma_ta",year_ta,month_ta);
 			</script>
 			<?php
 //			$trexon_y = date("Y");
@@ -257,11 +285,11 @@ confirm_logged_in();
 			?>
 			</div>
 			
-			<div id="tabs-3">
-			Ανανεώστε τη σελίδα σε κάθε αλλαγή στην καρτέλα "ωράριο εργασίας" ώστε να επαναφορτωθεί το πρόγραμμα του Ιατρού εργασίας.<br/>
+			<div id="tabs-3" >
+			<!--Ανανεώστε τη σελίδα σε κάθε αλλαγή στην καρτέλα "ωράριο εργασίας" ώστε να επαναφορτωθεί το πρόγραμμα του Ιατρού εργασίας.<br/>-->
 			<div id="meleti_programma_ie0"></div>
 			<script>
-				get_calendar("meleti_programma_ie",1);
+				get_calendar("meleti_programma_ie",year_ie,month_ie);
 			</script>
 			<?php
 //			draw_calendar($trexon_y,"meleti_programma_ie",1);
@@ -269,12 +297,41 @@ confirm_logged_in();
 			</div>
 			
 			<div id="tabs-4">
-			<img src="images/extras.png"><br/>
+			<table><tr><td style="width:135px;">
+			<img src="images/extras.png"><br/></td><td>
 			Εδώ αναγράφονται οι ελάχιστες ώρες απασχόλησης που θα πρέπει να δηλώσει ο Τ.Α. και ο Ι.Ε. ανάλογα με την κατηγορία της επιχείρησης 
 			και τον αριθμό των εργαζομένων όπως δηλώθηκαν. Παρακάτω αναγράφονται οι συνολικές ώρες των προγραμμάτων που έχουν δηλωθεί για τον 
-			Τ.Α. και τον Ι.Ε. και ελέγχονται αν υπερκαλύπτονται τα γεγονότα.<br/><br/>
+			Τ.Α. και τον Ι.Ε. και ελέγχονται αν υπερκαλύπτονται τα γεγονότα.<br/><br/></td></tr></table>
 			<h1>Ελάχιστες ώρες εργασίας Τ.Α. και Ι.Ε.</h1>
+			<div id="times_check"></div>
+			<div id='wait' style="display:none;position:absolute;top:130px;left:500px;"><img src="images/ajax-loader.gif"></div>
+			<script>
+			function check_times(){
+				document.getElementById('wait').style.display="inline";
+				//AJAX call
+				var xmlhttp=new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function()  {
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					var rec=xmlhttp.responseText;
+					var recs=rec.split("|");
+					var out="Τεχνικός ασφαλείας: "+recs[0]+"<br/>";
+					out += "Ιατρός εργασίας: "+recs[1]+"<br/>";
+					out += "<h1>Ώρες εργασίας Τ.Α. και Ι.Ε. (βάσει προγράμματος)</h1>";
+					out += "Τεχνικός ασφαλείας: "+recs[2]+"<br/>";
+					out += "Ιατρός εργασίας: "+recs[3]+"<br/>";
+					out += "<h1>Γεγονότα που υπερκαλύπτεται το ωράριο:</h1>";
+					out += recs[4] + "<br />" + recs[5];
+					document.getElementById("times_check").innerHTML=out;
+					document.getElementById('wait').style.display="none";
+				}}
+				xmlhttp.open("GET","includes/functions_calendar.php?wres=1",true);
+				xmlhttp.send();
+			}
+			check_times();
+			</script>
 			
+			
+<!--
 			<?php
 			$el_wres = elaxistes_wres();
 			echo "Τεχνικός ασφαλείας: ".$el_wres[0]."<br/>";
@@ -294,6 +351,7 @@ confirm_logged_in();
 			echo print_overlaping("meleti_programma_ta");
 			echo print_overlaping("meleti_programma_ie");
 			?>
+-->			
 			</div>
 		
 		
