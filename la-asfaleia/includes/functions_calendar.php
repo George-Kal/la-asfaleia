@@ -168,7 +168,7 @@ function draw_calendar($year, $pinakas){
 			$calendar.= '<div class="day-number">'.$list_day.'</div>';
 			
 				//ευρεση των γεγονότων για τη μέρα από τη βάση
-				$db_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"day" => $running_day,"kathe" => $evdomada));
+				$db_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id'],"day" => $running_day,"kathe" => $evdomada));
 				$data_gegonota = $database->select($db_table,$db_columns,$db_parameters);
 				$count_gegonota = $database->count($db_table, $db_parameters);
 				
