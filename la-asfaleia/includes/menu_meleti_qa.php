@@ -35,6 +35,8 @@ confirm_logged_in();
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4>Ερωτηματολόγια</h4>
 				Ερωτηματολόγια περιγραφή βοήθειας
+				<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+				<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 				</div>
 		</div>
 		
@@ -42,7 +44,7 @@ confirm_logged_in();
 			<div id="tabs">
 			<ul>
 				<li><a href="#tabs-1">Ερωτηματολόγια</a></li>
-				<li><a href="#tabs-2">Προεπισκόπηση</a></li>
+				<li><a href="#tabs-2" onclick="get_qa();">Προεπισκόπηση</a></li>
 			</ul>
 			
 			<div id="tabs-1">
@@ -73,9 +75,28 @@ confirm_logged_in();
 			</div>
 			
 			<div id="tabs-2"> 
+			<div id="check_qa"></div>
+			<div id='wait' style="display:none;position:absolute;top:130px;left:500px;"><img src="images/ajax-loader.gif"></div>
+			<script>
+			function get_qa(){
+				document.getElementById('wait').style.display="inline";
+				//AJAX call
+				var xmlhttp=new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function()  {
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					document.getElementById("check_qa").innerHTML=xmlhttp.responseText;
+					document.getElementById('wait').style.display="none";
+				}}
+				xmlhttp.open("GET","includes/functions_qa.php?qa=1",true);
+				xmlhttp.send();
+			}
+			get_qa();
+			</script>
+<!--
 			<?php
 			echo create_qa();
 			?>
+-->
 			</div>
 		
 		

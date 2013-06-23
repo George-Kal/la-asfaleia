@@ -38,7 +38,7 @@ confirm_logged_in();
 	<div class="row-fluid">
 	
 		<div class="span2">
-			    <div class="alert alert-info">
+			    <div class="alert alert-info"  id="programma_help_1">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4>Ωράριο εργασίας Τ.Α.</h4>
 				Δηλώστε το πρόγραμμα εργασίας του Τ.Α. και του Ι.Ε.<br/>
@@ -46,7 +46,7 @@ confirm_logged_in();
 				να κατανείμετε το ωράριο σε διαφορετικές ημέρες και ώρες για το ίδιο υποκατάστημα.
 				</div>
 				
-				<div class="alert alert-info">
+				<div class="alert alert-info" id="programma_help_2">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4>Πρόγραμμα Τ.Α. και Ι.Ε.</h4>
 				Εμφανίζεται το πλήρες πρόγραμμα (αφορά όλες τις μελέτες) του Τ.Α. για το τρέχον έτος. 
@@ -64,9 +64,9 @@ confirm_logged_in();
 		<div class="span10">
 			<div id="tabs">
 			<ul>
-				<li><a href="#tabs-1">Ωράριο εργασίας</a></li>
-				<li><a href="#tabs-2" onclick="get_calendar('meleti_programma_ta',year_ta,month_ta);">Πρόγραμμα Τ.Α.</a></li>
-				<li><a href="#tabs-3" onclick="get_calendar('meleti_programma_ie',year_ie,month_ie);">Πρόγραμμα Ι.Ε.</a></li>
+				<li><a href="#tabs-1" onclick="show_help(1);">Ωράριο εργασίας</a></li>
+				<li><a href="#tabs-2" onclick="get_calendar('meleti_programma_ta',year_ta,month_ta);show_help(2);">Πρόγραμμα Τ.Α.</a></li>
+				<li><a href="#tabs-3" onclick="get_calendar('meleti_programma_ie',year_ie,month_ie);show_help(2);">Πρόγραμμα Ι.Ε.</a></li>
 				<li><a href="#tabs-4" onclick="check_times();">Ελάχιστες απαιτήσεις</a></li>
 			</ul>
 			
@@ -215,8 +215,8 @@ confirm_logged_in();
 			<div id="meleti_programma_ta0"></div>
 			<script>
 				var d = new Date();
-				month_ta=d.getMonth();
-				month_ie=d.getMonth();
+				month_ta=d.getMonth()+1;
+				month_ie=d.getMonth()+1;
 				year_ta=d.getFullYear();
 				year_ie=d.getFullYear();
 				function get_calendar(pinakas,year,month){
@@ -254,13 +254,13 @@ confirm_logged_in();
 				}
 				function this_month_meleti_programma_ta(){
 					var d = new Date();
-					month_ta=d.getMonth();
+					month_ta=d.getMonth()+1;
 					year_ta=d.getFullYear();
 					get_calendar("meleti_programma_ta",year_ta,month_ta);
 				}
 				function this_month_meleti_programma_ie(){
 					var d = new Date();
-					month_ie=d.getMonth();
+					month_ie=d.getMonth()+1;
 					year_ie=d.getFullYear();
 					get_calendar("meleti_programma_ie",year_ie,month_ie);
 				}
@@ -306,6 +306,12 @@ confirm_logged_in();
 			<div id="times_check"></div>
 			<div id='wait' style="display:none;position:absolute;top:130px;left:500px;"><img src="images/ajax-loader.gif"></div>
 			<script>
+			function show_help(n){
+				document.getElementById('programma_help_1').style.display="none";
+				document.getElementById('programma_help_2').style.display="none";
+				document.getElementById('programma_help_'+n).style.display="block";
+			}
+			show_help(1);
 			function check_times(){
 				document.getElementById('wait').style.display="inline";
 				//AJAX call

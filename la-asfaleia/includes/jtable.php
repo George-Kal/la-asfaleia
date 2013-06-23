@@ -23,13 +23,13 @@ THE SOFTWARE.
 ?>
 
   <table style="width:99%;margin-right:auto;margin-left:auto;"><tr><td>
-	<div id="<?=$tb_name;?>" style="width: 100%;"></div>
+	<div id="<?php echo $tb_name;?>" style="width: 100%;"></div>
 	</td></tr></table>
 	<script type="text/javascript">
 		$(document).ready(function () {
 		    //Prepare jTable
-			$('#<?=$tb_name;?>').jtable({
-				title: '<?=$tb_title;?>',
+			$('#<?php echo $tb_name;?>').jtable({
+				title: '<?php echo $tb_title;?>',
 				animationsEnabled: false,
 				paging: true,
 				pageSize: 20,
@@ -54,12 +54,12 @@ THE SOFTWARE.
 					}]
 				},
 				actions: {
-					listAction: 'includes/jtable_actions.php?action=list&table=<?=$ped;?>&dig=<?=$dig;?>',
-					createAction: 'includes/jtable_actions.php?action=create&table=<?=$ped;?>&dig=<?=$dig;?>',
-					updateAction: 'includes/jtable_actions.php?action=update&table=<?=$ped;?>&dig=<?=$dig;?>',
-					deleteAction: 'includes/jtable_actions.php?action=delete&table=<?=$ped;?>&dig=<?=$dig;?>'
+					listAction: 'includes/jtable_actions.php?action=list&table=<?php echo $ped;?>&dig=<?php echo $dig;?>',
+					createAction: 'includes/jtable_actions.php?action=create&table=<?php echo $ped;?>&dig=<?php echo $dig;?>',
+					updateAction: 'includes/jtable_actions.php?action=update&table=<?php echo $ped;?>&dig=<?php echo $dig;?>',
+					deleteAction: 'includes/jtable_actions.php?action=delete&table=<?php echo $ped;?>&dig=<?php echo $dig;?>'
 				},
-				<?=$fields;?>
+				<?php echo $fields;?>
 				,
                 formCreated: function (event, data) 
                 {
@@ -74,7 +74,7 @@ THE SOFTWARE.
                 }
 				});
 
-			$('#<?=$tb_name;?>').jtable('load');
+			$('#<?php echo $tb_name;?>').jtable('load');
 
 		});
 	</script>

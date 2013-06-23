@@ -24,6 +24,32 @@ along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.html.
 Το παρόν σχόλιο πρέπει να παραμένει ως έχει ώστε να τηρείται η παραπάνω άδεια κατά τη διανομή.
 */
 
+if (isset($_GET['ktiria'])){
+	define('INCLUDE_CHECK',true);
+	require("medoo.php");
+	require("session.php");
+	$ktiria = count_ktiria();
+	if($ktiria==0){$text_entypo = "<font color=\"red\">Δηλώστε πρώτα ένα τουλάχιστον κτίριο στην επιχείρηση</font>";}
+	if($ktiria==1){$text_entypo = "<font color=\"green\">Έντυπο 1</font>";}
+	if($ktiria>1){$text_entypo = "<font color=\"green\">Έντυπο 2</font>";}
+	echo $text_entypo;
+	exit;
+}
+if (isset($_GET['proswpiko'])){
+	define('INCLUDE_CHECK',true);
+	require("medoo.php");
+	require("session.php");
+	$e=count_ergazomenoi();
+	$y=count_ypeythinoi();
+	$te=" εργαζόμενους";
+	if ($e==1)$te=" εργαζόμενο";
+	$ty=" υπεύθυνους";
+	if ($y==1)$ty=" υπεύθυνο";
+	echo $e.$te." στην επιχείρηση<br/>";
+	echo $y.$ty." στην επιχείρηση<br/>";
+	exit;
+}
+
 require("include_check.php");
 
 //Εκτύπωση στοιχείων μελέτης

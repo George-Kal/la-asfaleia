@@ -36,6 +36,7 @@ confirm_logged_in();
 				<h4>Σχέδιο έκτακτης ανάγκης</h4>
 				Προσθέστε τους εργαζομένους και τα καθήκοντα που έχουν σε περίπτωση έκτακτης ανάγκης όπως σε εκδήλωση πυρκαγιάς. <br/>
 				Ο κάθε εργαζόμενος μπορεί να επιφορτιστεί με συγκεκριμένα καθήκοντα ή απλά την εγκατάλειψη του χώρου εργασίας του.
+				<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 				</div>
 		</div>
 		
@@ -43,7 +44,7 @@ confirm_logged_in();
 			<div id="tabs">
 			<ul>
 				<li><a href="#tabs-1">Καθήκοντα</a></li>
-				<li><a href="#tabs-2">Προεπισκόπηση</a></li>
+				<li><a href="#tabs-2" onclick="get_sxedio();">Προεπισκόπηση</a></li>
 			</ul>
 			
 			<div id="tabs-1">
@@ -65,8 +66,27 @@ confirm_logged_in();
 			</div>
 			
 			<div id="tabs-2"> 
+
+			<div id="sxedio_preview"></div>
+			<div id='wait' style="display:none;position:absolute;top:130px;left:500px;"><img src="images/ajax-loader.gif"></div>
+			<script>
+			function get_sxedio(){
+				document.getElementById('wait').style.display="inline";
+				//AJAX call
+				var xmlhttp=new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function()  {
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					document.getElementById("sxedio_preview").innerHTML=xmlhttp.responseText;
+					document.getElementById('wait').style.display="none";
+				}}
+				xmlhttp.open("GET","includes/functions_epikindynotita.php?sxedio=1",true);
+				xmlhttp.send();
+			}
+			get_sxedio();
+			</script>
+
 			<?php
-			echo print_sxedio();
+//			echo print_sxedio();
 			?>
 			</div>
 		

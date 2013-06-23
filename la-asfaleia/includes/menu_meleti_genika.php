@@ -31,7 +31,7 @@ confirm_logged_in();
 	<div class="row-fluid">
 	
 		<div class="span2">
-			    <div class="alert alert-info">
+			    <div class="alert alert-info" id="genika_help_1">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4>Θέση</h4>
 				Σύρετε το δείκτη στο χάρτη στη θέση που βρίσκεται η επιχείρηση. Οι συντεταγμένες καθώς και η διεύθυνση 
@@ -40,14 +40,14 @@ confirm_logged_in();
 				Αφού προσθέσετε όλα τα στοιχεία πατήστε αποθήκευση θέσης ώστε να αποθηκευτούν τα δεδομένα για την παρούσα μελέτη.
 				</div>
 				
-				<div class="alert alert-info">
+				<div class="alert alert-info" id="genika_help_2" >
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4>Υπεύθυνος επιχείρησης</h4>
 				Δηλώστε τα στοιχεία του ιδιοκτήτη ή νομίμου εκπροσώπου της επιχείρησης όπως θέλετε να εμφανίζεται στα έντυπα των συμβάσεων 
 				και λοιπά έντυπα προς τις υπηρεσίες του Σ.ΕΠ.Ε.
 				</div>
 				
-				<div class="alert alert-info">
+				<div class="alert alert-info" id="genika_help_3" >
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4>Λοιπά κείμενα</h4>
 				Συμπληρώστε σε σύντομα κείμενα την παραγωγική διαδικασία της επιχείρησης και τα συμπεράσματά σας από την εκτίμηση επαγγελματικών 
@@ -59,16 +59,17 @@ confirm_logged_in();
 		<div class="span10">
 			<div id="tabs">
 			<ul>
-				<li><a href="#tabs-1">Θέση</a></li>
-				<li><a href="#tabs-2">Υπεύθυνος επιχείρησης</a></li>
-				<li><a href="#tabs-3">Παραγωγική διαδικασία</a></li>
-				<li><a href="#tabs-4">Συμπεράσματα</a></li>
+				<li><a href="#tabs-1" onclick="show_help(1);">Θέση</a></li>
+				<li><a href="#tabs-2" onclick="show_help(2);">Υπεύθυνος επιχείρησης</a></li>
+				<li><a href="#tabs-3" onclick="show_help(3);">Παραγωγική διαδικασία</a></li>
+				<li><a href="#tabs-4" onclick="show_help(3);">Συμπεράσματα</a></li>
 			</ul>
 			
+			<div id='wait' style="display:none;position:absolute;top:130px;left:500px;z-index:9999;"><img src="images/ajax-loader.gif"></div>       
+
 			<div id="tabs-1">
 			<?php
 			$database = new medoo(DB_NAME);
-			
 			
 			$db_table = "meletes";
 			$db_columns = "*";
@@ -87,7 +88,6 @@ confirm_logged_in();
 			$tel = $select_meleti[0]["tel"];
 			$paragwgiki = $select_meleti[0]["paragwgiki"];
 			$symperasmata = $select_meleti[0]["symperasmata"];
-			
 			
 			$db_table1 = "meleti_idioktitis";
 			$db_columns1 = "*";
@@ -170,13 +170,12 @@ confirm_logged_in();
 			google.maps.event.addDomListener(window, 'load', initialize);
 			</script>
 			
-			
 				<div id="mapCanvas"></div>
 				<div id="infoPanel">
 				<b>Στοιχεία επιχείρησης:</b>
 				<div id="markerStatus"><i>Αλλάξτε τη θέση του δείκτη.</i></div>
 				<div id="address_from_map"></div>
-				<form name="map_form" action="index.php" method="POST">
+<!--				<form name="map_form" action="index.php" method="POST">  -->
 				
 				<table>
 				<tr><td><b>Διεύθυνση:</b></td><td><input class="input-xxlarge" type="text" id="address" name="address" value="<?php echo $address;?>"></td></tr>
@@ -201,10 +200,10 @@ confirm_logged_in();
 				<tr><td><b>Τηλέφωνο:</b></td><td><input type="text" id="tel" name="tel" value="<?php echo $tel;?>"></td></tr>
 				</table>
 				<br/>
-				<button type="submit" name="submit" value="save-location" class="btn btn-primary">Αποθήκευση θέσης</button>
-				</form>
+				<button id= 'save-location' class="btn btn-primary" onclick="save('save-location')">Αποθήκευση θέσης</button>
+<!--				</form>   -->
 				
-				<br/>
+				<br/><br/><br/>
 				<p><a href="#" id="dialog-ktimatologio-link" class="ui-state-default ui-corner-all"><span class="ui-icon ui-icon-newwin"></span>Κτηματολόγιο</a></p>
 				<!-- ui-ktimatologio -->
 				<div id="dialog-ktimatologio" title="Πληροφορίες">
@@ -215,9 +214,9 @@ confirm_logged_in();
 			</div>
 			
 			<div id="tabs-2"> 
-			<img src="images/person.png"><br/>
-			<form name="idioktitis_form" action="index.php" method="POST">
-				
+			<table><tr><td style="width:135px;">
+			<img src="images/person.png"><br/></td><td>
+<!--			<form name="idioktitis_form" action="index.php" method="POST">   -->
 				<table>
 				<tr><td><b>Ονοματεπώνυμο:</b></td><td><input type="text" id="idio_name" name="idio_name" value="<?php echo $idio_name;?>"></td></tr>
 				<tr><td><b>Όν. Πατέρα:</b></td><td><input type="text" id="idio_father" name="idio_father" value="<?php echo $idio_father;?>"></td></tr>
@@ -228,23 +227,23 @@ confirm_logged_in();
 				<tr><td><b>ΑΔΤ:</b></td><td><input type="text" id="idio_adt" name="idio_adt" value="<?php echo $idio_adt;?>"></td></tr>
 				</table>
 				<br/>
-				<button type="submit" name="submit" value="save-idioktitis" class="btn btn-primary">Αποθήκευση ιδιοκτήτη</button>
-				</form>
+				<button id='save-idioktitis' class="btn btn-primary" onclick="save('save-idioktitis')">Αποθήκευση ιδιοκτήτη</button>
+<!--			</form>   -->
+			</td></tr></table>
 			</div>
 			
 			
 			<div id="tabs-3">
 			Περιγράψτε σε σύντομο κείμενο την παραγωγική διαδικασία της επιχείρησης.<br/>
-				<form id="form_paragwgiki" action="" method="post">
+<!--				<form id="form_paragwgiki" action="" method="post"> -->
 				<div id="kefalaio">
 				<div id="container" style="background:#eee;border:1px solid #000000;padding:3px;width:99%;height:610px;">
 				<textarea name="text_paragwgiki" id="text_paragwgiki" ><?php echo $paragwgiki;?></textarea>
 				<script type="text/javascript">CKEDITOR.replace('text_paragwgiki');</script>
 				</div>
 				</div>
-				
-				<button type="submit" name="submit" value="save-paragwgiki" class="btn btn-primary">Αποθήκευση παραγωγικής διαδικασίας</button>
-				</form>
+				<button id="save-paragwgiki" class="btn btn-primary" onclick="save('save-paragwgiki')">Αποθήκευση παραγωγικής διαδικασίας</button>
+<!--				</form> -->
 			</div>
 				
 		
@@ -252,16 +251,15 @@ confirm_logged_in();
 			<div id="tabs-4">
 			Μπορείτε πρώτα να προσθέσετε όλα τα στοιχεία της επιχείρησης και έπειτα να επιστρέψετε εδώ ώστε να γράψετε σέ σύντομο 
 			κείμενο τα συμπεράσματά σας.<br/>
-				<form id="form_symperasmata" action="" method="post">
+<!--				<form id="form_symperasmata" action="" method="post"> -->
 				<div id="kefalaio">
 				<div id="container" style="background:#eee;border:1px solid #000000;padding:3px;width:99%;height:610px;">
 				<textarea name="text_symperasmata" id="text_symperasmata" ><?php echo $symperasmata;?></textarea>
 				<script type="text/javascript">CKEDITOR.replace('text_symperasmata');</script>
 				</div>
 				</div>
-				
-				<button type="submit" name="submit" value="save-symperasmata" class="btn btn-primary">Αποθήκευση Συμπερασμάτων</button>
-				</form>
+				<button id="save-symperasmata" class="btn btn-primary" onclick="save('save-symperasmata')">Αποθήκευση Συμπερασμάτων</button>
+<!--				</form> -->
 			</div>
 				
 			</div>
@@ -269,3 +267,54 @@ confirm_logged_in();
 		</div>
 	</div>
 </div>
+<script>
+function show_help(n){
+	document.getElementById('genika_help_1').style.display="none";
+	document.getElementById('genika_help_2').style.display="none";
+	document.getElementById('genika_help_3').style.display="none";
+	document.getElementById('genika_help_'+n).style.display="block";
+}
+show_help(1);
+function save(x){
+	var t= $("#"+x).position().top;
+	var l= $("#"+x).position().left;
+	$('#wait').css({position: 'absolute',left: l+300, top: t-20});
+	document.getElementById('wait').style.display="inline";
+	if (x=="save-idioktitis"){
+		var s="&idio_name="+document.getElementById('idio_name').value;
+		s += "&idio_father="+document.getElementById('idio_father').value;
+		s += "&idio_mother="+document.getElementById('idio_mother').value;
+		s += "&idio_address="+document.getElementById('idio_address').value;
+		s += "&idio_tel="+document.getElementById('idio_tel').value;
+		s += "&idio_afm="+document.getElementById('idio_afm').value;
+		s += "&idio_adt="+document.getElementById('idio_adt').value;
+	}
+	if (x=="save-location"){
+		var s="&name="+document.getElementById('name').value;
+		s += "&perigrafi="+document.getElementById('perigrafi').value;
+		s += "&toponymio="+document.getElementById('toponymio').value;
+		s += "&address="+document.getElementById('address').value;
+		s += "&type="+document.getElementById('type').selectedIndex;
+		s += "&lat="+document.getElementById('lat').value;
+		s += "&lon="+document.getElementById('lon').value;
+		s += "&afm="+document.getElementById('afm').value;
+		s += "&doy="+document.getElementById('doy').value;
+		s += "&tel="+document.getElementById('tel').value;
+	}
+	if (x=="save-paragwgiki"){
+		var s="&text_paragwgiki="+CKEDITOR.instances.text_paragwgiki.getData();
+	}
+	if (x=="save-symperasmata"){
+		var s="&text_symperasmata="+CKEDITOR.instances.text_symperasmata.getData();
+	}
+	//AJAX call
+	var xmlhttp=new XMLHttpRequest();
+	xmlhttp.onreadystatechange=function()  {
+	if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+		document.getElementById('wait').style.display="none";
+	}}
+	xmlhttp.open("POST","includes/forms_user_new.php",true);
+	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	xmlhttp.send("submit="+x+s);	
+}
+</script>

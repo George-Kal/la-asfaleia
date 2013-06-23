@@ -24,6 +24,28 @@ along with this program.  If not, see http://www.gnu.org/licenses/gpl-3.0.html.
 Το παρόν σχόλιο πρέπει να παραμένει ως έχει ώστε να τηρείται η παραπάνω άδεια κατά τη διανομή.
 */
 
+if (isset($_GET['sxedio'])){
+	define('INCLUDE_CHECK',true);
+	require("medoo.php");
+	require("session.php");
+	echo print_sxedio();
+	exit;
+}
+if (isset($_GET['epikindynotita'])){
+	define('INCLUDE_CHECK',true);
+	require("medoo.php");
+	require("session.php");
+	echo calc_epikindynotita();
+	exit;
+}
+if (isset($_GET['metra'])){
+	define('INCLUDE_CHECK',true);
+	require("medoo.php");
+	require("session.php");
+	echo print_metraprolipsis();
+	exit;
+}
+
 require("include_check.php");
 
 //Υπολογισμός επικινδυνότητας από την τρέχουσα μελέτη.

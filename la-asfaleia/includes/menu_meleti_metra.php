@@ -37,6 +37,7 @@ confirm_logged_in();
 				Προσθέστε πρόσθετα μέτρα πρόληψης. Αυτά ενδεχομένως να μην έχουν προβλεφθεί με βάση τις πηγές κινδύνου που 
 				ορίστηκαν στην περιοχή "Πηγές Κινδύνων" του λογισμικού. Κάθε γραμμή στον πίνακα μεταφέρεται αυτούσια στον 
 				πίνακα των ειδικών μέτρων πρόληψης για το κάθε κτίριο στο τεύχος της μελέτης.
+				<br/><br/><br/><br/><br/><br/><br/>
 				</div>
 		</div>
 		
@@ -44,7 +45,7 @@ confirm_logged_in();
 			<div id="tabs">
 			<ul>
 				<li><a href="#tabs-1">Μέτρα</a></li>
-				<li><a href="#tabs-2">Προεπισκόπηση</a></li>
+				<li><a href="#tabs-2" onclick="get_metra();">Προεπισκόπηση</a></li>
 			</ul>
 			
 			<div id="tabs-1">
@@ -122,15 +123,32 @@ confirm_logged_in();
 </div>
 </div>
 <!-- ######################### Κρυφό div για εμφάνιση ######################### -->
-			
-			
+
 			</div>
 			
 			<div id="tabs-2"> 
+			<div id="check_metra"></div>
+			<div id='wait' style="display:none;position:absolute;top:130px;left:500px;"><img src="images/ajax-loader.gif"></div>
+			<script>
+			function get_metra(){
+				document.getElementById('wait').style.display="inline";
+				//AJAX call
+				var xmlhttp=new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function()  {
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					document.getElementById("check_metra").innerHTML=xmlhttp.responseText;
+					document.getElementById('wait').style.display="none";
+				}}
+				xmlhttp.open("GET","includes/functions_epikindynotita.php?metra=1",true);
+				xmlhttp.send();
+			}
+			get_metra();
+			</script>
+<!--
 			<?php
 			echo print_metraprolipsis();
-			
 			?>
+-->
 			</div>
 		
 		

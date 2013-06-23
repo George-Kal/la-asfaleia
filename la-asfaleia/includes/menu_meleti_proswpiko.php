@@ -35,6 +35,8 @@ confirm_logged_in();
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4>Προσωπικό</h4>
 				Προσωπικό περιγραφή βοήθειας
+				<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+				<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 				</div>
 		</div>
 		
@@ -43,7 +45,7 @@ confirm_logged_in();
 			<ul>
 				<li><a href="#tabs-1">Προσωπικό</a></li>
 				<li><a href="#tabs-2">Υπεύθυνοι</a></li>
-				<li><a href="#tabs-3">Σύνολο εργαζομένων</a></li>
+				<li><a href="#tabs-3" onclick="get_proswpiko();">Σύνολο εργαζομένων</a></li>
 			</ul>
 			
 			<div id="tabs-1">
@@ -109,13 +111,36 @@ confirm_logged_in();
 			
 			
 			<div id="tabs-3">
-			<img src="images/extras.png"><br/>
-			Ανανεώστε τη σελίδα σε κάθε αλλαγή στην καρτέλα "Προσωπικό" και "Υπεύθυνοι".<br/><br/>
+			<table><tr><td style="width:135px;">
+			<img src="images/extras.png"><br/></td><td>
+<!--			Ανανεώστε τη σελίδα σε κάθε αλλαγή στην καρτέλα "Προσωπικό" και "Υπεύθυνοι".  -->
+			<br/><br/>
 			Έχετε δηλώσει:<br/>
+			<div id="check_proswpiko"></div>
+			<div id='wait' style="display:none;position:absolute;top:130px;left:500px;"><img src="images/ajax-loader.gif"></div>
+			</td></tr></table>
+			<script>
+			function get_proswpiko(){
+				document.getElementById('wait').style.display="inline";
+				//AJAX call
+				var xmlhttp=new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function()  {
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					document.getElementById("check_proswpiko").innerHTML=xmlhttp.responseText;
+					document.getElementById('wait').style.display="none";
+				}}
+				xmlhttp.open("GET","includes/functions_genika.php?proswpiko=1",true);
+				xmlhttp.send();
+			}
+			get_proswpiko();
+			</script>
+
+<!--			
 			<?php
 			echo count_ergazomenoi()." εργαζομένους στην επιχείρηση<br/>";
 			echo count_ypeythinoi()." υπευθύνους στην επιχείρηση<br/>";
 			?>
+-->			
 			</div>
 			
 			</div>

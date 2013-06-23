@@ -97,6 +97,7 @@ confirm_logged_in();
 			echo "<li><a href=\"#entypo-".$teyxos["type"]."\">".$teyxos["name"]."</a></li>";
 			}
 			echo "</ul>";
+
 			echo "<form id=\"form_kefalaia\" action=\"\" method=\"post\">";
 			
 			foreach($select_teyxos as $teyxos){

@@ -51,7 +51,7 @@ confirm_logged_in();
 			<div id="tabs">
 			<ul>
 				<li><a href="#tabs-1">Κτίρια</a></li>
-				<li><a href="#tabs-2">Έντυπα</a></li>
+				<li><a href="#tabs-2" onclick="get_entypa();">Έντυπα</a></li>
 			</ul>
 			
 			<div id="tabs-1">
@@ -85,16 +85,38 @@ confirm_logged_in();
 			</div>
 			
 			<div id="tabs-2"> 
-			<img src="images/extras.png"><br/>
-			<i>(ανανεώστε τη σελίδα όταν προσθέσετε όλα τα κεντρικά καταστήματα και υποκαταστήματα της επιχείρησης)</i><br/><br/>
-			Σύμφωνα με τον αριθμό των κτιρίων που δηλώσατε για την επιχείρηση θα πρέπει να κατατεθεί το έντυπο:<br/>
+			<table><tr><td style="width:135px;">
+			<img src="images/extras.png"><br/></td><td>
+<!--			<i>(ανανεώστε τη σελίδα όταν προσθέσετε όλα τα κεντρικά καταστήματα και υποκαταστήματα της επιχείρησης)</i><br/><br/>  -->
+			<br/><br/>Σύμφωνα με τον αριθμό των κτιρίων που δηλώσατε για την επιχείρηση θα πρέπει να κατατεθεί το έντυπο:<br/>  
+			<div id="check_entypa"></div>
+			<div id='wait' style="display:none;position:absolute;top:130px;left:500px;"><img src="images/ajax-loader.gif"></div>
+			</td></tr></table>
+			<script>
+			function get_entypa(){
+				document.getElementById('wait').style.display="inline";
+				//AJAX call
+				var xmlhttp=new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function()  {
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					document.getElementById("check_entypa").innerHTML=xmlhttp.responseText;
+					document.getElementById('wait').style.display="none";
+				}}
+				xmlhttp.open("GET","includes/functions_genika.php?ktiria=1",true);
+				xmlhttp.send();
+			}
+			get_entypa();
+			</script>
+
+<!--
 			<?php
 			$ktiria = count_ktiria();
 			if($ktiria==0){$text_entypo = "<font color=\"red\">Δηλώστε πρώτα ένα τουλάχιστον κτίριο στην επιχείρηση</font>";}
 			if($ktiria==1){$text_entypo = "<font color=\"green\">Έντυπο 1</font>";}
 			if($ktiria>1){$text_entypo = "<font color=\"green\">Έντυπο 2</font>";}
 			echo $text_entypo;
-			?>
+			?>  
+-->
 			</div>
 		
 		

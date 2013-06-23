@@ -48,7 +48,7 @@ confirm_logged_in();
 			<div id="tabs">
 			<ul>
 				<li><a href="#tabs-1">Πηγές κινδύνου</a></li>
-				<li><a href="#tabs-2">Επικινδυνότητα (προεπισκόπηση)</a></li>
+				<li><a href="#tabs-2" onclick="get_epikindynotita();">Επικινδυνότητα (προεπισκόπηση)</a></li>
 			</ul>
 			
 			<div id="tabs-1">
@@ -94,10 +94,29 @@ confirm_logged_in();
 			</div>
 			
 			<div id="tabs-2"> 
-			Ανανεώστε τη σελίδα μετά την προσθήκη δεδομένων στην καρτέλα "Πηγές κινδύνου" για προεπισκόπηση των αποτελεσμάτων.
+			<div id="check_epikindynotita"></div>
+			<div id='wait' style="display:none;position:absolute;top:130px;left:500px;"><img src="images/ajax-loader.gif"></div>
+			<script>
+			function get_epikindynotita(){
+				document.getElementById('wait').style.display="inline";
+				//AJAX call
+				var xmlhttp=new XMLHttpRequest();
+				xmlhttp.onreadystatechange=function()  {
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					document.getElementById("check_epikindynotita").innerHTML=xmlhttp.responseText;
+					document.getElementById('wait').style.display="none";
+				}}
+				xmlhttp.open("GET","includes/functions_epikindynotita.php?epikindynotita=1",true);
+				xmlhttp.send();
+			}
+			get_epikindynotita();
+			</script>
+<!--
+			Ανανεώστε τη σελίδα μετά την προσθήκη δεδομένων στην καρτέλα "Πηγές κινδύνου" για προεπισκόπηση των αποτελεσμάτων. 
 			<?php
 			echo calc_epikindynotita();
 			?>
+-->
 			</div>
 		
 		
