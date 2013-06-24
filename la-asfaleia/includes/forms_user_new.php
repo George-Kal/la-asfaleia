@@ -385,15 +385,15 @@ if(isset($_POST['submit']) AND $_POST['submit']=='save-location')
 $database = new medoo(DB_NAME);
 $db_table = "meletes";
 $update_parameters = array(
-	"name" => $_POST['name'],
-	"perigrafi" => $_POST['perigrafi'],
-	"toponymio" => $_POST['toponymio'],
-	"address" => $_POST['address'],
+	"name" => str_replace("|^|","&",$_POST['name']),
+	"perigrafi" => str_replace("|^|","&",$_POST['perigrafi']),
+	"toponymio" => str_replace("|^|","&",$_POST['toponymio']),
+	"address" => str_replace("|^|","&",$_POST['address']),
 	"type" => $_POST['type'],
 	"lat" => $_POST['lat'],
 	"lon" => $_POST['lon'],
 	"afm" => $_POST['afm'],
-	"doy" => $_POST['doy'],
+	"doy" => str_replace("|^|","&",$_POST['doy']),
 	"tel" => $_POST['tel']
 	);
 $where_parameters = array ("AND" => array("user_id" => $_SESSION['user_id'],"id" => $_SESSION['meleti_id']));
@@ -415,7 +415,7 @@ $update_parameters = array(
 	"name" => $_POST['idio_name'],
 	"father" => $_POST['idio_father'],
 	"mother" => $_POST['idio_mother'],
-	"address" => $_POST['idio_address'],
+	"address" => str_replace("|^|","&",$_POST['idio_address']),
 	"tel" => $_POST['idio_tel'],
 	"afm" => $_POST['idio_afm'],
 	"adt" => $_POST['idio_adt']
@@ -433,10 +433,10 @@ if(isset($_POST['submit']) AND $_POST['submit']=='save-paragwgiki')
 {
 $database = new medoo(DB_NAME);
 $db_table = "meletes";
-$update_parameters = array("paragwgiki" => $_POST['text_paragwgiki']);
+$update_parameters = array("paragwgiki" => str_replace("|^|","&",$_POST['text_paragwgiki']));
 $where_parameters = array ("AND" => array("user_id" => $_SESSION['user_id'],"id" => $_SESSION['meleti_id']));
 $update_meleti = $database->update($db_table,$update_parameters,$where_parameters);
-
+echo "*".$_POST['text_paragwgiki']."*";
 //header("Location: index.php?nav=meleti_general");
 exit;
 }
@@ -446,7 +446,7 @@ if(isset($_POST['submit']) AND $_POST['submit']=='save-symperasmata')
 {
 $database = new medoo(DB_NAME);
 $db_table = "meletes";
-$update_parameters = array("symperasmata" => $_POST['text_symperasmata']);
+$update_parameters = array("symperasmata" => str_replace("|^|","&",$_POST['text_symperasmata']));
 $where_parameters = array ("AND" => array("user_id" => $_SESSION['user_id'],"id" => $_SESSION['meleti_id']));
 $update_meleti = $database->update($db_table,$update_parameters,$where_parameters);
 

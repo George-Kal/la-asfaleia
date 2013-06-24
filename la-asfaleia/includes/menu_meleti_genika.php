@@ -83,12 +83,12 @@ confirm_logged_in();
 			<div id="tabs-1">
 			<?php
 			$database = new medoo(DB_NAME);
-			
+
 			$db_table = "meletes";
 			$db_columns = "*";
 			$where_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"id" => $_SESSION['meleti_id']));
 			$select_meleti = $database->select($db_table,$db_columns,$where_parameters);
-			
+
 			$name = $select_meleti[0]["name"];
 			$perigrafi = $select_meleti[0]["perigrafi"];
 			$toponymio = $select_meleti[0]["toponymio"];
@@ -101,12 +101,12 @@ confirm_logged_in();
 			$tel = $select_meleti[0]["tel"];
 			$paragwgiki = $select_meleti[0]["paragwgiki"];
 			$symperasmata = $select_meleti[0]["symperasmata"];
-			
+
 			$db_table1 = "meleti_idioktitis";
 			$db_columns1 = "*";
 			$where_parameters1 = array("AND" => array("user_id" => $_SESSION['user_id'],"id" => $_SESSION['meleti_id']));
 			$select_meleti1 = $database->select($db_table1,$db_columns1,$where_parameters1);
-			
+
 			$idio_name = $select_meleti1[0]["name"];
 			$idio_father = $select_meleti1[0]["father"];
 			$idio_mother = $select_meleti1[0]["mother"];
@@ -114,7 +114,7 @@ confirm_logged_in();
 			$idio_tel = $select_meleti1[0]["tel"];
 			$idio_afm = $select_meleti1[0]["afm"];
 			$idio_adt = $select_meleti1[0]["adt"];
-			
+
 			?>
 			
 			<script type="text/javascript">
@@ -299,28 +299,28 @@ function save(x){
 		var s="&idio_name="+document.getElementById('idio_name').value;
 		s += "&idio_father="+document.getElementById('idio_father').value;
 		s += "&idio_mother="+document.getElementById('idio_mother').value;
-		s += "&idio_address="+document.getElementById('idio_address').value;
+		s += "&idio_address="+document.getElementById('idio_address').value.replace(/&/g,"|^|");
 		s += "&idio_tel="+document.getElementById('idio_tel').value;
 		s += "&idio_afm="+document.getElementById('idio_afm').value;
 		s += "&idio_adt="+document.getElementById('idio_adt').value;
 	}
 	if (x=="save-location"){
-		var s="&name="+document.getElementById('name').value;
-		s += "&perigrafi="+document.getElementById('perigrafi').value;
-		s += "&toponymio="+document.getElementById('toponymio').value;
-		s += "&address="+document.getElementById('address').value;
+		var s="&name="+document.getElementById('name').value.replace(/&/g,"|^|");
+		s += "&perigrafi="+document.getElementById('perigrafi').value.replace(/&/g,"|^|");
+		s += "&toponymio="+document.getElementById('toponymio').value.replace(/&/g,"|^|");
+		s += "&address="+document.getElementById('address').value.replace(/&/g,"|^|");
 		s += "&type="+document.getElementById('type').selectedIndex;
 		s += "&lat="+document.getElementById('lat').value;
 		s += "&lon="+document.getElementById('lon').value;
 		s += "&afm="+document.getElementById('afm').value;
-		s += "&doy="+document.getElementById('doy').value;
+		s += "&doy="+document.getElementById('doy').value.replace(/&/g,"|^|");
 		s += "&tel="+document.getElementById('tel').value;
 	}
 	if (x=="save-paragwgiki"){
-		var s="&text_paragwgiki="+CKEDITOR.instances.text_paragwgiki.getData();
+		var s="&text_paragwgiki="+CKEDITOR.instances.text_paragwgiki.getData().replace(/&/g,"|^|");
 	}
 	if (x=="save-symperasmata"){
-		var s="&text_symperasmata="+CKEDITOR.instances.text_symperasmata.getData();
+		var s="&text_symperasmata="+CKEDITOR.instances.text_symperasmata.getData().replace(/&/g,"|^|");
 	}
 	//AJAX call
 	var xmlhttp=new XMLHttpRequest();
