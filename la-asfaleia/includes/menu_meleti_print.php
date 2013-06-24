@@ -48,7 +48,7 @@ confirm_logged_in();
 				θα πρέπει να επαναδημιουργήσετε το τεύχος σας πατώντας το κουμπί "Δημιουργία από πρότυπο" ώστε να 
 				εμφανιστούν τα νέα στοιχεία στα κείμενα των κεφαλαίων. <br/><br/>
 				Οποιαδήποτε στιγμή σας ικανοποιεί το αποτέλεσμα μπορείτε να τυπώσετε το τεύχος πατώντας στο πλήκτρο 
-				"Εκτύπωση" ή "Προεπισκόπηση" της μπάρας εργαλείων ή "Δημιουργία pdf" για να αποθηευτεί το pdf στο φάκελο output.
+				"Εκτύπωση" ή "Προεπισκόπηση" της μπάρας εργαλείων ή "Δημιουργία pdf" για να αποθηκευθεί το pdf στο φάκελο output.
 				</div>
 				<div class="alert alert-error">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -111,14 +111,106 @@ confirm_logged_in();
 			
 			}
 			echo "<button type=\"submit\" name=\"submit\" value=\"save-teyxos\" class=\"btn btn-primary\">Αποθήκευση</button> ";
-			//echo "<button type=\"submit\" name=\"submit\" value=\"print-teyxos\" class=\"btn btn-success\">Εκτύπωση</button>";
-			echo "<a class=\"btn btn-success\" href=\"includes/print_teyxos.php\" target=\"_blank\">Δημιουργία PDF</a>";
+			echo "<input type \"button\" value=\"Εκτύπωση\" onclick=\"print_teyxos();\" class=\"btn btn-success\" />";
+			//echo "<a class=\"btn btn-success\" href=\"includes/print_teyxos.php\" target=\"_blank\">Δημιουργία PDF</a>";
 			echo"</form>";
 			
 		?>
-		
-		
 			</div>
 		</div>
 	</div>
 </div>
+<?php
+$printteyxos = new medoo(DB_NAME);
+$teyxos = "";
+$tb_teyxos = "meleti_teyxos";
+$col_teyxos = "*";
+$where_teyxos = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id']));
+$kefalaia = $printteyxos->select($tb_teyxos,$col_teyxos,$where_teyxos);
+foreach($kefalaia as $kefalaio){
+	$teyxos .= $kefalaio["text"];
+	$teyxos = str_replace(array("\r\n", "\r", "\n", "\t"),"",$teyxos);
+	$teyxos .= '<p style="page-break-before:always;"><div style="text-align:center;width:95%;border-bottom:1px solid black;"><h3>Μελέτη εκτίμησης επαγγελματικών κινδύνων</h3></div></p>';
+}
+
+$pos=0;
+do{
+	$ch=0;
+	$pos1=strpos($teyxos,"<table",$pos);
+	$pos2=strpos($teyxos,">",$pos1);
+	if ($pos2-$pos1>5){
+		$ch += 1;
+		$teyxos=substr($teyxos,0,$pos1)."<table>".substr($teyxos,$pos2+1);
+	}
+	$pos=$pos2;
+}while ($ch>0);
+$fnd='<div style="page-break-after: always;"><span style="display: none;">&nbsp;</span></div>';
+$hed='<div style="text-align:center;width:95%;border-bottom:1px solid black;"><h3>Μελέτη εκτίμησης επαγγελματικών κινδύνων</h3></div>';
+$rpl='<div style="page-break-before: always;">'.$hed.'</div>';
+do{
+	$ch=0;
+	$pos=strpos($teyxos,$fnd);
+	if ($pos!=false){
+		$ch += 1;
+		$teyxos=substr($teyxos,0,$pos).$rpl.substr($teyxos,$pos+87);
+	}
+}while ($ch>0);
+
+?>
+<div class="PrintArea" id="PrintTeyxos" style="display:none;">
+<?php echo $teyxos;?>
+</div>
+<script>
+function print_teyxos(){
+    var f = new Iframe();
+	writeDoc = f.doc;
+    printWindow = f.contentWindow || f;
+	writeDoc.open();
+    writeDoc.write( "<html>" + getHead() + getBody() + "</html>" );
+    writeDoc.close();
+	printWindow.focus();
+    printWindow.print();
+}
+function getHead(){
+	var head = "<head>";
+    $(document).find("link")
+    .filter(function(){ return $(this).attr("rel").toLowerCase() == "stylesheet"; })
+    .filter(function(){
+		var media = $(this).attr("media");
+        return (media == undefined || media.toLowerCase() == "" || media.toLowerCase() == "print" || media.toLowerCase() == "all")
+	})
+	.each(function(){
+		head += '<link type="text/css" rel="stylesheet" href="' + $(this).attr("href") + '" >';
+	});
+    return head += "</head>";
+}
+function getBody() {
+	return '<body><div class="PrintArea">' + document.getElementById('PrintTeyxos').innerHTML + '</div></body>';
+}
+function Iframe() {
+	var frameId = "PrintArea_1";
+	var iframeStyle = 'border:0;position:absolute;width:0px;height:0px;left:0px;top:0px;';
+    var iframe;
+    try {
+		iframe = document.createElement('iframe');
+        document.body.appendChild(iframe);
+        $(iframe).attr({ style: iframeStyle, id: frameId, src: "" });
+        iframe.doc = null;
+        iframe.doc = iframe.contentDocument ? iframe.contentDocument : ( iframe.contentWindow ? iframe.contentWindow.document : iframe.document);
+	}
+    catch( e ) { throw e + ". iframes may not be supported in this browser."; }
+    if ( iframe.doc == null ) throw "Cannot find document.";
+	return iframe;
+}
+
+</script>
+
+
+
+
+
+
+
+
+
+

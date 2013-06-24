@@ -38,6 +38,7 @@ require("include_check.php");
 	<link href="stylesheets/jquery-ui-1.9.2.custom.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css"  href="stylesheets/jtable_grey.css"/>
 	<link rel="stylesheet" type="text/css"  href="stylesheets/calendar.css"/>
+	<link rel="stylesheet" type="text/css"  href="stylesheets/PrintArea.css" />
 	
 	<script src="javascripts/jquery-1.8.3.js" type="text/javascript"></script>
 	<script src="javascripts/jquery-ui-1.9.2.custom.js" type="text/javascript"></script>
