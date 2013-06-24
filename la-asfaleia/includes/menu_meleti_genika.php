@@ -31,6 +31,19 @@ confirm_logged_in();
 	<div class="row-fluid">
 	
 		<div class="span2">
+		
+				<div class="alert alert-success" id="AJAX_save">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4>Αποθήκευση</h4>
+				Επιτυχής αποθήκευση
+				</div>
+				<div class="alert alert-error" id="AJAX_nosave">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
+				<h4>Προσοχή</h4>
+				Δεν ήταν δυνατή η αποθήκευση!
+				</div>
+				
+				
 			    <div class="alert alert-info" id="genika_help_1">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4>Θέση</h4>
@@ -273,6 +286,8 @@ function show_help(n){
 	document.getElementById('genika_help_2').style.display="none";
 	document.getElementById('genika_help_3').style.display="none";
 	document.getElementById('genika_help_'+n).style.display="block";
+	document.getElementById('AJAX_save').style.display="none";
+	document.getElementById('AJAX_nosave').style.display="none";
 }
 show_help(1);
 function save(x){
@@ -312,6 +327,11 @@ function save(x){
 	xmlhttp.onreadystatechange=function()  {
 	if (xmlhttp.readyState==4 && xmlhttp.status==200) {
 		document.getElementById('wait').style.display="none";
+		document.getElementById('AJAX_save').style.display="block";
+		if (xmlhttp.readyState!=4 && xmlhttp.status!=200) {
+		document.getElementById('AJAX_save').style.display="none";
+		document.getElementById('AJAX_nosave').style.display="block";
+		}
 	}}
 	xmlhttp.open("POST","includes/forms_user_new.php",true);
 	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
