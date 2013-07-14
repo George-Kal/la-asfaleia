@@ -48,7 +48,8 @@ confirm_logged_in();
 			<div id="tabs">
 			<ul>
 				<li><a href="#tabs-1">Πηγές κινδύνου</a></li>
-				<li><a href="#tabs-2" onclick="get_epikindynotita();">Επικινδυνότητα (προεπισκόπηση)</a></li>
+				<li><a href="#tabs-2">Μετρήσεις</a></li>
+				<li><a href="#tabs-3" onclick="get_epikindynotita();">Επικινδυνότητα (προεπισκόπηση)</a></li>
 			</ul>
 			
 			<div id="tabs-1">
@@ -93,7 +94,34 @@ confirm_logged_in();
 			?>	
 			</div>
 			
-			<div id="tabs-2"> 
+			<div id="tabs-2">
+			<?php 
+				$ped="meleti_measurements";
+				$dig="0|0|0|0|0|0|0|0|0|0|0|0|0";
+				$tb_name="meleti_measurements";
+				$tb_title = "Επιτόπιες μετρήσεις";
+				$fields="fields: {
+					id: {key: true,create: false,edit: false,list: false},
+					user_id: {create: false,edit: false,list: false},
+					meleti_id: {create: false,edit: false,list: false},
+					ktirio_id: {title: 'Κτίριο',width: '10%',listClass: 'center',options: ".getktiria()."},
+					type: {title: 'Τύπος',width: '10%',listClass: 'center'},
+					thesi: {title: 'Θέση μέτρησης',width: '10%',listClass: 'center'},
+					value: {title: 'Τιμή μέτρησης',width: '10%',listClass: 'center'},
+					unit: {title: 'Μονάδα',width: '10%',listClass: 'center'},
+					provlepsi: {title: 'Πρόβλεψη πρόληψης',width: '15%',listClass: 'center',options: 
+						{
+						'1':'Ναι',
+						'2':'Όχι'
+						}},
+					metra: {title: 'Πρόσθετα μέτρα',width: '35%',listClass: 'center', type: 'textarea'}	
+				}";
+				include('includes/jtable.php');
+			?>
+			Προσθέστε εδώ τις παραμέτρους τις οποίες μετράτε κατά τις επισκέψεις σας στο χώρο της επιχείρησης όπως τιμές θορύβου, τιμές χημικών παραγόντων, φωτισμού κλπ.
+			</div>
+			
+			<div id="tabs-3"> 
 			<div id="check_epikindynotita"></div>
 			<div id='wait' style="display:none;position:absolute;top:130px;left:500px;"><img src="images/ajax-loader.gif"></div>
 			<script>

@@ -35,7 +35,7 @@ if (isset($_GET['epikindynotita'])){
 	define('INCLUDE_CHECK',true);
 	require("medoo.php");
 	require("session.php");
-	echo calc_epikindynotita();
+	echo calc_epikindynotita()."<br/>".print_measurements();
 	exit;
 }
 if (isset($_GET['metra'])){
@@ -180,6 +180,43 @@ function print_metraprolipsis(){
 	}
 	
 	return $metra;
+}
+
+//Εκτύπωση επιτόπιων μετρήσεων
+function print_measurements(){
+	$database = new medoo(DB_NAME);
+	$db_table = "meleti_measurements";
+	$db_columns = "*";
+	$db_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id']));
+	$data_measurements = $database->select($db_table,$db_columns,$db_parameters);
+	$count_measurements = $database->count($db_table, $db_parameters);
+	
+	$measurements = "";
+	
+	if ($count_measurements==0){
+	$measurements .= "ΠΡΟΣΟΧΗ! Δεν έχουν πραγματοποιηθεί ακόμη μετρήσεις παραμέτρων στην επιχείρηση.";
+	}else{
+		$measurements .= "<table border=\"1\" class=\"table table-bordered table-hover\">";
+		$measurements .= "<tr><td>α/α</td><td>Κτίριο</td><td>Παράμετρος</td><td>Θέση</td><td>Τιμή</td><td>Μονάδα</td><td>Πρόβλεψη</td><td>Μέτρα</td></tr>";
+		
+		$i=1;
+		foreach($data_measurements as $data){
+			$measurements .= "<tr>";
+			$measurements .= "<td>".$i."</td>";
+				$data_ktirio = $database->select("meleti_ktiria",$db_columns,array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id'],"id" => $data["ktirio_id"])));
+			$measurements .= "<td>".$data_ktirio[0]["name"]."</td>";
+			$measurements .= "<td>".$data["type"]."</td>";
+			$measurements .= "<td>".$data["thesi"]."</td>";
+			$measurements .= "<td>".$data["value"]."</td>";
+			$measurements .= "<td>".$data["unit"]."</td>";
+			$measurements .= "<td>".$data["provlepsi"]."</td>";
+			$measurements .= "<td>".$data["metra"]."</td>";			
+			$measurements .= "</tr>";
+		$i++;	
+		}
+		$measurements .= "</table>";
+	}	
+	return $measurements;	
 }
 
 //Εκτύπωση περιγραφών πηγών κινδύνου.

@@ -240,6 +240,8 @@ function print_stoixeiaergazomenoi(){
 	$db_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id']));
 	$data_ergazomenoi = $database->select($db_table,$db_columns,$db_parameters);
 	$count_ergazomenoi = $database->count($db_table, $db_parameters);
+	$count_eidikotites = $database->count("library_eidikotiteserg");
+	
 	if ($count_ergazomenoi==0){
 	$ergazomenoi .= "ΠΡΟΣΟΧΗ! Δεν έχουν οριστεί εργαζόμενοι στην επιχείρηση";
 	}else{
@@ -257,7 +259,11 @@ function print_stoixeiaergazomenoi(){
 				if($data["gender"]==2){$gender="Γυναίκες";}
 				if($data["gender"]==3){$gender="<18 ετών";}
 			$ergazomenoi .= "<td>".$gender."</td>";		
-				$data_eidikotita = $database->select("library_eidikotiteserg","*",array("id"=>$data["type_ergazomenoi"]));
+			
+				if($data["type_ergazomenoi"]<=$count_eidikotites){$table_eidikotites="library_eidikotiteserg";}
+				if($data["type_ergazomenoi"]>$count_eidikotites){$table_eidikotites="user_eidikotiteserg";$data["type_ergazomenoi"]-=$count_eidikotites;}
+				
+				$data_eidikotita = $database->select($table_eidikotites,"*",array("id"=>$data["type_ergazomenoi"]));
 				$type=$data_eidikotita[0]["name"];
 				$map=$data_eidikotita[0]["map"];
 

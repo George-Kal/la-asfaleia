@@ -59,6 +59,7 @@ confirm_logged_in();
 			<ul>
 				<li><a href="#tabs-1">Στοιχεία Τ.Α.</a></li>
 				<li><a href="#tabs-2">Αλλαγή κωδικού σύνδεσης</a></li>
+				<li><a href="#tabs-3">Ειδικότητες εργαζομένων (χρήστης)</a></li>
 			</ul>
 			
 			<div id="tabs-1">
@@ -118,6 +119,24 @@ confirm_logged_in();
 				</table>
 				<button type="submit" name="submit" value="update-password" class="btn btn-primary">Αλλαγή κωδικού</button>
 			</form>
+			</div>
+			
+			<div id="tabs-3"> 
+			<?php 
+				$ped="user_eidikotiteserg";
+				$dig="0|0|0|0|0|0|0|0|0|0|0|0|0";
+				$tb_name="user_eidikotiteserg";
+				$tb_title = "Ειδικότητες εργαζομένων (χρήστης)";
+				$fields="fields: {
+					id: {key: true,create: false,edit: false,list: false},
+					user_id: {create: false,edit: false,list: false},
+					name: {title: 'Ειδικότητα',width: '40%',listClass: 'center', type: 'textarea'},
+					map: {title: 'ΜΑΠ',width: '60%',listClass: 'center', type: 'textarea'}
+				}";
+				include('includes/jtable_justuser.php');
+			?>
+			Πέραν των προβλεπομένων ειδικοτήτων από το διαχειριστή μπορείτε να προσθέσετε νέες για χρήση μόνο στο λογαριασμό χρήστη σας. Οι ειδικότητες έπειτα 
+			είναι διαθέσιμες στο μενού "Μελέτη"->"Προσωπικό".
 			</div>
 
 		

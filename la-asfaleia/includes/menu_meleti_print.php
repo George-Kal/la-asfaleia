@@ -116,6 +116,27 @@ confirm_logged_in();
 			echo"</form>";
 			
 		?>
+		<br/><br/>
+		<a href="#other_popup" role="button" data-toggle="modal">Τι άλλο πρέπει να προσθέσω στη γραπτή εκτίμηση επαγγελματικών κινδύνων για να είναι πλήρης;</a>
+<!-- ######################### Κρυφό div για εμφάνιση ######################### -->			
+<div id="other_popup" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Πρόσθετα</h3>
+</div>
+<div class="modal-body">
+<p>
+Δεδομένα για τα χημικά που χρησιμοποιούνται όπως τα δελτία ελέγχου (MSDS) ως παραρτήματα. <br/>
+Στατιστικά ατυχημάτων κατά το παρελθόν.<br/>
+Οτιδήποτε άλλο θέτει την υγεία ή την ασφάλεια των εργαζομένων σε κίνδυνο (ακόμη και εξωγενείς παράγοντες)<br/><br/>
+</p>
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">OK</button>
+</div>
+</div>
+<!-- ######################### Κρυφό div για εμφάνιση ######################### -->
+
 			</div>
 		</div>
 	</div>

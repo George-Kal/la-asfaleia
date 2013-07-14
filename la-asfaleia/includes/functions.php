@@ -142,6 +142,12 @@ function get_eidikotitaerg(){
 	$ret[$data["id"]] =  $data["name"];
 	}
 	
+	$select_table1 = $database->select("user_eidikotiteserg",$db_columns,array("user_id"=>$_SESSION["user_id"]));
+	foreach($select_table1 as $data1)
+	{
+	$ret[$count_table+$data1["id"]] =  $data1["name"];
+	}
+	
 return json_encode($ret);
 }
 
@@ -151,6 +157,7 @@ function make_selectbox($pinakas,$nameofselect="",$name="name",$id="id",$classof
 	$database = new medoo(DB_NAME);
 	$db_table = $pinakas;
 	$db_columns = array ($id,$name);
+	if($db_table=="library_industry_cat"){$db_columns = array ($id,$name,"cat");}
 	$select_table = $database->select($db_table,$db_columns);
 	$count_table = $database->count($db_table);
 	
@@ -160,7 +167,15 @@ function make_selectbox($pinakas,$nameofselect="",$name="name",$id="id",$classof
 	
 	foreach($select_table as $data)
 	{
-	$select .= "<option value=\"".$data[$id]."\">".$data[$name]."</option>";
+		if($db_table=="library_industry_cat"){
+			if($data["cat"]==1){$cat="A";}
+			if($data["cat"]==2){$cat="B";}
+			if($data["cat"]==3){$cat="Γ";}
+		$select .= "<option value=\"".$data[$id]."\">".$data[$name]."-".$cat."</option>";
+		}
+		if($db_table!="library_industry_cat"){
+		$select .= "<option value=\"".$data[$id]."\">".$data[$name]."</option>";
+		}
 	}
 	$select .= "</select>";
 	

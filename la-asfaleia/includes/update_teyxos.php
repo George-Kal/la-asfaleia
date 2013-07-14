@@ -94,7 +94,7 @@ $z[8]="{TEYXOS_ERWTIMATOLOGIA}";
 $z1[8] = create_qa();
 
 $z[9]="{TEYXOS_EPIKINDYNOTITA}";
-$z1[9] = calc_epikindynotita();
+$z1[9] = calc_epikindynotita()."<br/>".print_measurements();
 
 
 $z[10]="{EPIXEIRISI_STOIXEIA}";
