@@ -35,7 +35,7 @@ if (isset($_GET['epikindynotita'])){
 	define('INCLUDE_CHECK',true);
 	require("medoo.php");
 	require("session.php");
-	echo calc_epikindynotita()."<br/>".print_measurements();
+	echo calc_epikindynotita()."<br/>".print_measurements()."<br/>".print_taktikoielegxoi();
 	exit;
 }
 if (isset($_GET['metra'])){
@@ -118,8 +118,11 @@ function calc_epikindynotita(){
 	$data_piges = $database->select($db_table,$db_columns,$db_parameters);
 	$count_piges = $database->count($db_table, $db_parameters);
 	
+	if ($count_piges==0){
+	$epikindynotita .= "ΠΡΟΣΟΧΗ! Δεν έχουν οριστεί πηγές κινδύνου στην επιχείρηση.";
+	}else{
 	$epikindynotita .= "<table border=\"1\" class=\"table table-bordered table-hover\">";
-	$epikindynotita .= "<tr><th>Κτίριο</th><th>Πηγή κινδύνου</th><th>Σύντομη περιγραφή</th><th>Σοβαρότητα</th><th>Έκθεση</th><th>Πιθανότητα</th><th>Επικινδυνότητα (R)</th><th>Περιγραφή (R)</th><th>Ενέργειες</th></tr>";
+	$epikindynotita .= "<tr><th>Κτίριο</th><th>Πηγή κινδύνου</th><th>Σύντομη περιγραφή</th><th>Σοβαρότητα</th><th>Έκθεση</th><th>Πιθανότητα</th><th>Επικινδυνότητα (R)</th><th>Περιγραφή (R)</th><th>Ενέργειες (R)</th><th>Πρόβλεψη</th><th>Μέτρα</th></tr>";
 		foreach($data_piges as $data){
 		$epikindynotita .= "<tr>";
 		
@@ -141,10 +144,14 @@ function calc_epikindynotita(){
 			if($result>400 AND $result<=625){$perigrafi=$array_perigrafi[5];$energeies=$array_energeies[5];}
 		$epikindynotita .= "<td>".$perigrafi."</td>";
 		$epikindynotita .= "<td>".$energeies."</td>";
+			if($data["provlepsi"]==1){$provlepsi="ΝΑΙ";}
+			if($data["provlepsi"]==2){$provlepsi="ΟΧΙ";}
+		$epikindynotita .= "<td>".$provlepsi."</td>";
+		$epikindynotita .= "<td>".$data["metra"]."</td>";
 		$epikindynotita .= "</tr>";
 		}
 	$epikindynotita .= "</table>";
-	
+	}
 	return $epikindynotita;
 }
 
@@ -209,7 +216,9 @@ function print_measurements(){
 			$measurements .= "<td>".$data["thesi"]."</td>";
 			$measurements .= "<td>".$data["value"]."</td>";
 			$measurements .= "<td>".$data["unit"]."</td>";
-			$measurements .= "<td>".$data["provlepsi"]."</td>";
+				if($data["provlepsi"]==1){$provlepsi="NAI";}
+				if($data["provlepsi"]==2){$provlepsi="OXI";}
+			$measurements .= "<td>".$provlepsi."</td>";
 			$measurements .= "<td>".$data["metra"]."</td>";			
 			$measurements .= "</tr>";
 		$i++;	
@@ -217,6 +226,40 @@ function print_measurements(){
 		$measurements .= "</table>";
 	}	
 	return $measurements;	
+}
+
+//Εκτύπωση τακτικών ελέγχων
+function print_taktikoielegxoi(){
+	$database = new medoo(DB_NAME);
+	$db_table = "meleti_taktikoielegxoi";
+	$db_columns = "*";
+	$db_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id']));
+	$data_elegxoi = $database->select($db_table,$db_columns,$db_parameters);
+	$count_elegxoi = $database->count($db_table, $db_parameters);
+	
+	$elegxoi = "";
+	
+	if ($count_elegxoi==0){
+	$elegxoi .= "ΠΡΟΣΟΧΗ! Δεν έχουν δηλωθεί ακόμη τακτικοί ή περιοδικοί έλεγχοι εξοπλισμού.";
+	}else{
+		$elegxoi .= "<table border=\"1\" class=\"table table-bordered table-hover\">";
+		$elegxoi .= "<tr><td>α/α</td><td>Τύπος ελέγχου</td><td>Ημερομηνία ελέγχου</td><td>Ονομ/νο ελεγκτή</td><td>Ειδικότητα ελεγκτή</td><td>Παρατηρήσεις</td></tr>";
+		
+		$i=1;
+		foreach($data_elegxoi as $data){
+			$elegxoi .= "<tr>";
+			$elegxoi .= "<td>".$i."</td>";
+			$elegxoi .= "<td>".$data["type"]."</td>";
+			$elegxoi .= "<td>".$data["date"]."</td>";
+			$elegxoi .= "<td>".$data["name"]."</td>";
+			$elegxoi .= "<td>".$data["eidikotita"]."</td>";
+			$elegxoi .= "<td>".$data["sxolia"]."</td>";
+			$elegxoi .= "</tr>";
+		$i++;	
+		}
+		$elegxoi .= "</table>";
+	}	
+	return $elegxoi;	
 }
 
 //Εκτύπωση περιγραφών πηγών κινδύνου.
@@ -241,6 +284,7 @@ function print_pigeskindynoy(){
 		foreach($piges_array as $id){
 		$data_library_piges = $database->select("library_pigeskindynoy","*",array("id" => $id));
 		$piges .= $data_library_piges[0]["perigrafi"];
+		$piges .= "<p style=\"page-break-before:always;\">&nbsp;</p>";	
 		}
 	
 	$piges .= "<p style=\"page-break-before:always;\">&nbsp;</p>";	
@@ -252,12 +296,15 @@ function print_pigeskindynoy(){
 function print_sxedio(){
 	$database = new medoo(DB_NAME);
 	$db_table = "meleti_sxedio";
-	$db_library = "library_eidikotiteserg";
 	$db_columns = "*";
 	$db_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id']));
 	$data_sxedio = $database->select($db_table,$db_columns,$db_parameters);
 	$count_sxedio = $database->count($db_table, $db_parameters);
+	$count_eidikotites = $database->count("library_eidikotiteserg");
 	
+	if ($count_sxedio==0){
+	$sxedio .= "ΠΡΟΣΟΧΗ! Δεν έχει καταρτιστεί ακόμα σχέδιο ασφαλείας σε περίπτωση επικίνδυνης κατάστασης.";
+	}else{
 	$sxedio = "";
 	$sxedio .= "<table border=\"1\" class=\"table table-bordered table-hover\">";
 	$sxedio .= "<tr><th>α/α</th><th>Ονοματεπώνυμο/Κατηγορία εργαζομένων</th><th>Ειδικότητα</th><th>Καθήκοντα</th></tr>";
@@ -269,7 +316,10 @@ function print_sxedio(){
 		$sxedio .= "<td>".$i."</td>";
 		$sxedio .= "<td>".$data["name"]."</td>";
 		
-			$data_eidikotita = $database->select($db_library,"*",array("id"=>$data["type"]));
+			if($data["type"]<=$count_eidikotites){$table_eidikotites="library_eidikotiteserg";}
+			if($data["type"]>$count_eidikotites){$table_eidikotites="user_eidikotiteserg";$data["type"]-=$count_eidikotites;}
+			
+			$data_eidikotita = $database->select($table_eidikotites,"*",array("id"=>$data["type"]));
 		$sxedio .= "<td>".$data_eidikotita[0]["name"]."</td>";
 		$sxedio .= "<td>".$data["kathikonta"]."</td>";
 		$sxedio .= "</tr>";
@@ -277,6 +327,7 @@ function print_sxedio(){
 		}
 	
 	$sxedio .= "</table>";	
+	}
 	return $sxedio;	
 }
 

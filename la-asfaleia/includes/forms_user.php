@@ -319,7 +319,7 @@ $err = array();
 
 $database = new medoo(DB_NAME);
 $db_table = "meletes";
-$meleti_tables = array("meletes","meleti_entypa","meleti_idioktitis","meleti_ktiria","meleti_metra","meleti_piges","meleti_programma_ie","meleti_programma_ta","meleti_proswpiko","meleti_qa","meleti_sxedio","meleti_teyxos","meleti_ypeythinos");
+$meleti_tables = array("meletes","meleti_entypa","meleti_idioktitis","meleti_ktiria","meleti_measurements","meleti_metra","meleti_piges","meleti_programma_ie","meleti_programma_ta","meleti_proswpiko","meleti_qa","meleti_sxedio","meleti_taktikoielegxoi","meleti_teyxos","meleti_theseiserg","meleti_ypeythinos");
 $db_columns = array ("id","user_id","name");
 $select_parameters = array ("AND" => array("id" => $_GET['meleti_id'],"user_id" => $_SESSION['user_id']));
 $delete_parameters = array("id" => $_GET['meleti_id']);
@@ -530,6 +530,46 @@ if(isset($_POST['submit']) AND $_POST['submit']=='create-entypa'){
 		$update_teyxos = $database->update($entypa_table,$update_parameters,$updatewhere_parameters);
 	}
 	include("includes/update_entypa.php");
+}
+
+//Φόρμα για προσθήκη ερωτήσεων από τις πρότυπες
+if(isset($_POST['submit']) AND $_POST['submit']=='create-qa'){
+
+	$database = new medoo(DB_NAME);
+	$qa_table = "meleti_qa";
+	$protypo_table = "library_qa";
+	$db_columns = "*";
+	
+	//Επιλογή των πρότυπων ερωτήσεων
+	$select_protypo = $database->select($protypo_table,$db_columns);
+	
+	//Αντιγραφή του πρότυπου τεύχους 
+	foreach($select_protypo as $protypo){
+		$insert_parameters = array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id'],"question" => $protypo["question"],"answer_type" => $protypo["answer_type"]);
+		$update_teyxos = $database->insert($qa_table,$insert_parameters);
+	}
+}
+
+//Φόρμα για αντιγραφή λίστας εργαζομένων από τον πίνακα meleti_proswpiko στον πίνακα meleti_sxedio
+if(isset($_POST['submit']) AND $_POST['submit']=='create-sxedio'){
+
+	$database = new medoo(DB_NAME);
+	$write_table = "meleti_sxedio";
+	$read_table = "meleti_proswpiko";
+	$db_columns = "*";
+	$where_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id']));
+	
+	//Επιλογή των εργαζομένων για την παρούσα μελέτη
+	$select_ergazomenoi = $database->select($read_table,$db_columns,$where_parameters);
+	
+	//Αντιγραφή των εργαζομένων στο σχέδιο έκτακτης ανάγκης 
+	foreach($select_ergazomenoi as $protypo){
+		if($protypo["ar_ergazomenoi"]==1 AND $protypo["name"]!=""){$omada="";}
+		if($protypo["ar_ergazomenoi"]==1 AND $protypo["name"]==""){$omada="-(Ομάδα με 1 εργαζομένο)";}
+		if($protypo["ar_ergazomenoi"]>1){$omada="-(Ομάδα ".$protypo["ar_ergazomenoi"]." εργαζομένων)";}
+		$insert_parameters = array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id'],"name" => $protypo["name"].$omada,"type" => $protypo["type_ergazomenoi"]);
+		$update_teyxos = $database->insert($write_table,$insert_parameters);
+	}
 }
 
 

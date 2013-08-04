@@ -29,10 +29,14 @@ if (isset($_GET['ktiria'])){
 	require("medoo.php");
 	require("session.php");
 	$ktiria = count_ktiria();
-	if($ktiria==0){$text_entypo = "<font color=\"red\">Δηλώστε πρώτα ένα τουλάχιστον κτίριο στην επιχείρηση</font>";}
-	if($ktiria==1){$text_entypo = "<font color=\"green\">Έντυπο 1</font>";}
-	if($ktiria>1){$text_entypo = "<font color=\"green\">Έντυπο 2</font>";}
+	if($ktiria[0]==0){$text_entypo = "<font color=\"red\">Δηλώστε πρώτα ένα τουλάχιστον κτίριο στην επιχείρηση</font>";}
+	if($ktiria[2]==0){$text_entypo = "<font color=\"green\">Έντυπο 1</font>";}
+	if($ktiria[2]!=0){$text_entypo = "<font color=\"green\">Έντυπο 2</font>";}
 	echo $text_entypo;
+	echo "<br/><br/>Έχουν δηλωθεί:<br/>";
+	echo $ktiria[0]." Κτίρια στο κεντρικό κατάστημα της επιχείρησης.<br/>";
+	echo $ktiria[1]." Κτίρια σε υποκαταστήματα στην επιχείρηση.<br/>";
+	echo $ktiria[2]." εξωτερικοί χώροι στην επιχείρηση.<br/>";
 	exit;
 }
 if (isset($_GET['proswpiko'])){
@@ -246,7 +250,7 @@ function print_stoixeiaergazomenoi(){
 	$ergazomenoi .= "ΠΡΟΣΟΧΗ! Δεν έχουν οριστεί εργαζόμενοι στην επιχείρηση";
 	}else{
 		$ergazomenoi .= "<table border=\"1\" class=\"table table-bordered table-hover\">";
-		$ergazomenoi .= "<tr><td>α/α</td><td>Κτίριο</td><td>αρ. εργαζομένων</td><td>Φύλλο</td><td>Ειδικότητα</td><td>Είδος απασχόλησης</td><td>ΜΑΠ</td></tr>";
+		$ergazomenoi .= "<tr><td>α/α</td><td>Κτίριο</td><td>αρ. εργαζομένων</td><td>Ονομ/μο</td><td>Φύλλο</td><td>Ειδικότητα</td><td>Είδος απασχόλησης</td><td>ΜΑΠ</td></tr>";
 		
 		$i=1;
 		foreach($data_ergazomenoi as $data){
@@ -255,6 +259,7 @@ function print_stoixeiaergazomenoi(){
 				$data_ktirio = $database->select("meleti_ktiria",$db_columns,array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id'],"id" => $data["ktirio_id"])));
 			$ergazomenoi .= "<td>".$data_ktirio[0]["name"]."</td>";
 			$ergazomenoi .= "<td>".$data["ar_ergazomenoi"]."</td>";
+			$ergazomenoi .= "<td>".$data["name"]."</td>";
 				if($data["gender"]==1){$gender="Άνδρες";}
 				if($data["gender"]==2){$gender="Γυναίκες";}
 				if($data["gender"]==3){$gender="<18 ετών";}
@@ -279,6 +284,133 @@ function print_stoixeiaergazomenoi(){
 		$ergazomenoi .= "</table>";
 	}
 	return $ergazomenoi;
+}
+
+//Εκτύπωση στοιχείων θέσεων εργασίας
+function print_theseiserg(){
+	
+	$theseiserg = "";
+	
+	$database = new medoo(DB_NAME);
+	$db_table = "meleti_theseiserg";
+	$db_columns = "*";
+	$db_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id']));
+	$data_theseis = $database->select($db_table,$db_columns,$db_parameters);
+	$count_theseis = $database->count($db_table, $db_parameters);
+	
+	if ($count_theseis==0){
+	$theseiserg .= "ΠΡΟΣΟΧΗ! Δεν έχουν οριστεί θέσεις εργασίας στην επιχείρηση";
+	}else{
+		$theseiserg .= "<table border=\"1\" class=\"table table-bordered table-hover\">";
+		$theseiserg .= "<tr><td>α/α</td><td>Κτίριο</td><td>Περιγραφή θέσης εργασίας</td><td>Σημάνσεις</td></tr>";
+		
+		$i=1;
+		foreach($data_theseis as $data){
+			$theseiserg .= "<tr>";
+			$theseiserg .= "<td>".$i."</td>";
+				$data_ktirio = $database->select("meleti_ktiria",$db_columns,array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id'],"id" => $data["ktirio_id"])));
+			$theseiserg .= "<td>".$data_ktirio[0]["name"]."</td>";
+			$theseiserg .= "<td>".$data["perigrafi"]."</td>";
+			$theseiserg .= "<td>".$data["simansi"]."</td>";				
+			$theseiserg .= "</tr>";
+		$i++;	
+		}
+		$theseiserg .= "</table>";
+		$theseiserg .= "<br/>";
+		
+		$theseiserg .= "Ενδεχόμενη έκθεση σε βλαπτικούς παράγοντες - Θέσεις εργασίας";
+		
+		$theseiserg .= "<span style=\"font-size:8px;\">";
+		$theseiserg .= "<table border=\"1\" class=\"table table-bordered table-hover\">";
+		$theseiserg .= "<tr>
+		<td>α/α θέσης</td>
+		<td>Ελεύθερα καλώδια</td>
+		<td>Ολισθηρό δάπεδο</td>
+		<td>Φωτισμός</td>
+		<td>Θερμικό περιβάλλον</td>
+		<td>Εξαερισμός</td>
+		<td>Ακτινοβολίες</td>
+		<td>Θόρυβος</td>
+		<td>Δονήσεις</td>
+		<td>Κτιριολογικές απαιτήσεις</td>
+		<td>Εργασία με ΗΥ</td>
+		<td>Βιολογικοί παράγοντες</td>
+		<td>Χημικοί παράγοντες</td>
+		<td>Καρκινογόνοι παράγοντες</td>
+		<td>Ηλεκτρικό ρεύμα</td>
+		<td>Εκρηκτικές ατμόσφαιρες</td>
+		<td>Πυρασφάλεια</td>
+		<td>Εργασίες σε ύψος</td>
+		<td>Περιορισμένοι χώροι</td>
+		<td>Χειρονακτικός χειρισμός φορτίων</td>
+		<td>Φορητά εργαλεία</td>
+		<td>Συντήρηση και επισκευές</td>
+		<td>Κοπή μετάλλων</td>
+		<td>Περονοφόρα και ανυψωτικά</td>
+		<td>Απορριμματοφόρα</td>
+		<td>Κλαρκ</td>
+		<td>Οχήματα μεταφοράς</td>
+		<td>Χωματουργικά</td>
+		<td>Επιβλέψεις - Τεχνικά</td>
+		<td>Ναυπηγικά</td>
+		<td>Μεταλλευτικά - Λατομικά</td>
+		<td>Ψυχοκοινωνικοί</td>
+		<td>Βιολογικός καθαρισμός</td>
+		</tr>";
+		
+		$i=1;
+		$column_array = array(
+		"kalwdia",
+		"dapedo",
+		"fwtismos",
+		"thermiko",
+		"eksaerismos",
+		"aktinovolies",
+		"thorivos",
+		"doniseis",
+		"ktirio",
+		"pc",
+		"viologikoi",
+		"ximikoi",
+		"karkinogonoi",
+		"reyma",
+		"ekriktika",
+		"pyrasfaleia",
+		"ypsos",
+		"periorismenoi",
+		"xeironaktika",
+		"forita",
+		"syntirisi",
+		"kopi",
+		"peronofora",
+		"aporimatofora",
+		"klark",
+		"oximatametaforas",
+		"xwmatoyrgika",
+		"epivlepseis",
+		"naypigika",
+		"metaleytikalatomika",
+		"stress",
+		"viologikoikathar"
+		);
+		
+		foreach($data_theseis as $data){
+			$theseiserg .= "<tr>";
+			$theseiserg .= "<td>".$i."</td>";
+				foreach($column_array as $column){
+					if($data[$column]==1){$value="OXI";}
+					if($data[$column]==2){$value="<font color=\"red\">NAI</font>";}
+				$theseiserg .= "<td>".$value."</td>";
+				}		
+			$theseiserg .= "</tr>";
+		$i++;	
+		}
+		$theseiserg .= "</table>";
+		$theseiserg .= "</span>";
+		
+		
+	}
+	return $theseiserg;
 }
 
 //Εκτύπωση αριθμού εργαζομένων
@@ -319,9 +451,23 @@ function count_ktiria(){
 	$db_table = "meleti_ktiria";
 	$db_columns = "*";
 	$db_parameters = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id']));
+	$db_param_kentriko = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id'],"kentriko" => 1));
+	$db_param_ypokat = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id'],"kentriko" => 2));
+	$db_param_eksw = array("AND" => array("user_id" => $_SESSION['user_id'],"meleti_id" => $_SESSION['meleti_id'],"kentriko" => 3));
+	
+	//Το σύνολο των κτιρίων στην επιχείρηση
 	$count_ktiria = $database->count($db_table, $db_parameters);
 	
-	return $count_ktiria;
+	//Τα κτίρια στο κεντρικό κατάστημα
+	$count_kentriko = $database->count($db_table, $db_param_kentriko);
+	
+	//Τα κτίρια στα υποκαταστήματα κατάστημα
+	$count_ypokat = $database->count($db_table, $db_param_ypokat);
+	
+	//Οι εξωτερικοί χώροι εργασίας
+	$count_eksw = $database->count($db_table, $db_param_eksw);
+	
+	return array($count_ktiria,$count_ypokat,$count_eksw);
 
 }
 ?>

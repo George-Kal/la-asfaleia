@@ -108,15 +108,6 @@ confirm_logged_in();
 			get_entypa();
 			</script>
 
-<!--
-			<?php
-			$ktiria = count_ktiria();
-			if($ktiria==0){$text_entypo = "<font color=\"red\">Δηλώστε πρώτα ένα τουλάχιστον κτίριο στην επιχείρηση</font>";}
-			if($ktiria==1){$text_entypo = "<font color=\"green\">Έντυπο 1</font>";}
-			if($ktiria>1){$text_entypo = "<font color=\"green\">Έντυπο 2</font>";}
-			echo $text_entypo;
-			?>  
--->
 			</div>
 		
 		

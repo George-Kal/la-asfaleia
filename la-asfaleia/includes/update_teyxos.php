@@ -113,7 +113,8 @@ $z[14]="{TEYXOS_YPEYTHINOI}";
 $z1[14] = print_stoixeiaypeythinoi();
 
 $z[15]="{TEYXOS_ERGAZOMENOI}";
-$z1[15] = print_stoixeiaergazomenoi();
+$z1[15] = print_stoixeiaergazomenoi()."<br/>".print_theseiserg();
+
 
 $z[16]="{TEYXOS_METRAPROLIPSIS}";
 $z1[16] = print_metraprolipsis();
@@ -126,6 +127,9 @@ $z1[18] = print_sxedio();
 
 $z[19]="{TEYXOS_NOMOTHESIA}";
 $z1[19] = create_laws();
+
+$z[20]="{TEYXOS_TIMESTAMP}";
+$z1[20] = date('F Y');
 
 //επιλογή στοιχείων τεύχους
 $tb_teyxos = "meleti_teyxos";

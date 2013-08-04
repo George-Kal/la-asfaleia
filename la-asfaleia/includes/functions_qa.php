@@ -82,9 +82,11 @@ function create_qa(){
 	$data_qa = $database->select($db_table,$db_columns,$db_parameters);
 	$count_qa = $database->count($db_table, $db_parameters);
 	
-	
+	if ($count_qa==0){
+	$qa .= "ΠΡΟΣΟΧΗ! Δεν έχουν προστεθεί ακόμα ερωτήσεις στο ερωτηματολόγιο της μελέτης. Δοκιμάστε να προσθέσετε πρότυπες ερωτήσεις ως βάση για το ερωτηματολόγιο των εργαζομένων.";
+	}else{
 	$qa .= "<table border=\"1\" class=\"table table-bordered table-hover\">";
-	$qa .= "<tr><th width=\"5%\">α/α</th><th>Ερώτηση</th><th>Απάντηση</th></tr>";
+	$qa .= "<tr><th width=\"5%\">α/α</th><th>Ερώτηση</th><th width=\"25%\">Απάντηση</th></tr>";
 	
 		$i=1;
 		foreach($data_qa as $data){
@@ -112,7 +114,7 @@ function create_qa(){
 	$qa .= "</table>";
 	$qa .= "<br/><br/>";
 	$qa .= "Ευχαριστούμε για το χρόνο που αφιερώσατε σε αυτό το ερωτηματολόγιο. Σύνολο ερωτήσεων: ".$count_qa;
-	
+	}
 	return $qa;
 }
 

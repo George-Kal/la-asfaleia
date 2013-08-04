@@ -49,7 +49,8 @@ confirm_logged_in();
 			<ul>
 				<li><a href="#tabs-1">Πηγές κινδύνου</a></li>
 				<li><a href="#tabs-2">Μετρήσεις</a></li>
-				<li><a href="#tabs-3" onclick="get_epikindynotita();">Επικινδυνότητα (προεπισκόπηση)</a></li>
+				<li><a href="#tabs-3">Έλεγχοι εξοπλισμού</a></li>
+				<li><a href="#tabs-4" onclick="get_epikindynotita();">Επικινδυνότητα (προεπισκόπηση)</a></li>
 			</ul>
 			
 			<div id="tabs-1">
@@ -63,9 +64,9 @@ confirm_logged_in();
 					user_id: {create: false,edit: false,list: false},
 					meleti_id: {create: false,edit: false,list: false},
 					ktirio_id: {title: 'Κτίριο',width: '20%',listClass: 'center',options: ".getktiria()."},
-					type: {title: 'Πηγές κινδύνου',width: '30%',listClass: 'center',options: ".getpigesk()."},
+					type: {title: 'Πηγές κινδύνου',width: '20%',listClass: 'center',options: ".getpigesk()."},
 					perigrafi: {title: 'Περιγραφή',width: '20%',listClass: 'center'},
-					sobarotita: {title: 'Σοβαρότητα',width: '10%',listClass: 'center',options: 
+					sobarotita: {title: 'Σοβαρότητα',width: '5%',listClass: 'center',options: 
 						{
 						'1':'1-Αμελητέα',
 						'2':'4-Σημαντική',
@@ -73,7 +74,7 @@ confirm_logged_in();
 						'4':'16-Πολύ σοβαρή',
 						'5':'25-Καταστρεπτική'
 						}},
-					ekthesi: {title: 'Έκθεση',width: '10%',listClass: 'center',options: 
+					ekthesi: {title: 'Έκθεση',width: '5%',listClass: 'center',options: 
 						{
 						'1':'1-Πολύ σπάνια',
 						'2':'2-Περιορισμένη',
@@ -81,14 +82,20 @@ confirm_logged_in();
 						'4':'4-Συχνή',
 						'5':'5-Διαρκής'
 						}},
-					pithanotita: {title: 'Πιθανότητα',width: '10%',listClass: 'center',options: 
+					pithanotita: {title: 'Πιθανότητα',width: '5%',listClass: 'center',options: 
 						{
 						'1':'1-Μηδενική',
 						'2':'2-Πολύ μικρή',
 						'3':'3-Μικρή',
 						'4':'4-Μεσαία',
 						'5':'5-Υψηλή'
-						}}	
+						}},
+					provlepsi: {title: 'Πρόβλεψη',width: '10%',listClass: 'center',options: 
+						{
+						'1':'Ναι',
+						'2':'Όχι'
+						}},
+					metra: {title: 'Μέτρα εξάλειψης',width: '15%',listClass: 'center', type: 'textarea'}		
 				}";
 				include('includes/jtable.php');
 			?>	
@@ -107,6 +114,7 @@ confirm_logged_in();
 					ktirio_id: {title: 'Κτίριο',width: '10%',listClass: 'center',options: ".getktiria()."},
 					type: {title: 'Τύπος',width: '10%',listClass: 'center'},
 					thesi: {title: 'Θέση μέτρησης',width: '10%',listClass: 'center'},
+					date: {title: 'Ημ/νια',width: '10%',listClass: 'center', type: 'date', displayFormat: 'yy-mm-dd'},
 					value: {title: 'Τιμή μέτρησης',width: '10%',listClass: 'center'},
 					unit: {title: 'Μονάδα',width: '10%',listClass: 'center'},
 					provlepsi: {title: 'Πρόβλεψη πρόληψης',width: '15%',listClass: 'center',options: 
@@ -122,6 +130,27 @@ confirm_logged_in();
 			</div>
 			
 			<div id="tabs-3"> 
+			<?php 
+				$ped="meleti_taktikoielegxoi";
+				$dig="0|0|0|0|0|0|0|0|0|0|0|0|0";
+				$tb_name="meleti_taktikoielegxoi";
+				$tb_title = "Τακτικοί έλεγχοι εξοπλισμού";
+				$fields="fields: {
+					id: {key: true,create: false,edit: false,list: false},
+					user_id: {create: false,edit: false,list: false},
+					meleti_id: {create: false,edit: false,list: false},
+					type: {title: 'Τύπος ελέγχου',width: '20%',listClass: 'center'},
+					date: {title: 'Ημ/νία ελέγχου',width: '20%',listClass: 'center', type: 'date', displayFormat: 'yy-mm-dd'},
+					name: {title: 'Όνομα ελεγκτή',width: '20%',listClass: 'center'},
+					eidikotita: {title: 'Ειδικότητα ελεγκτή',width: '20%',listClass: 'center'},
+					sxolia: {title: 'Παρατηρήσεις',width: '20%',listClass: 'center'}
+				}";
+				include('includes/jtable.php');
+			?>
+			
+			</div>
+			
+			<div id="tabs-4"> 
 			<div id="check_epikindynotita"></div>
 			<div id='wait' style="display:none;position:absolute;top:130px;left:500px;"><img src="images/ajax-loader.gif"></div>
 			<script>

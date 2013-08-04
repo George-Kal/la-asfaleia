@@ -66,6 +66,7 @@ echo APPLICATION_VERSION;
 			<li><a tabindex="-1" href="?nav=eidikotites"><i class="icon-certificate"></i>Ειδικότητες</a></li>
 			<li><a tabindex="-1" href="?nav=piges"><i class="icon-fire"></i>Πηγές κινδύνου</a></li>
 			<li class="divider"></li>
+			<li><a tabindex="-1" href="?nav=pqa"><i class="icon-print"></i>Πρότυπο ερωτηματολόγιο</a></li>
 			<li><a tabindex="-1" href="?nav=pentypa"><i class="icon-print"></i>Πρότυπα έντυπα</a></li>
 			<li><a tabindex="-1" href="?nav=pteyxos"><i class="icon-print"></i>Πρότυπο τεύχος</a></li>
     </ul>

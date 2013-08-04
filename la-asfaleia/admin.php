@@ -111,6 +111,9 @@ include("includes/page_header_admin.php");
 		if ($_GET["nav"]=="piges"){
 		include("includes/menu_admin_piges.php");
 		}
+		if ($_GET["nav"]=="pqa"){
+		include("includes/menu_admin_qa.php");
+		}
 		if ($_GET["nav"]=="pentypa"){
 		include("includes/menu_admin_entypa.php");
 		}

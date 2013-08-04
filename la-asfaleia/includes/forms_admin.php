@@ -34,7 +34,7 @@ if(isset($_GET['action']) AND $_GET['action']=='delete_user'){
 
 	$database = new medoo(DB_NAME);
 	$user_table = "users";
-	$meleti_tables = array("meletes","meleti_entypa","meleti_idioktitis","meleti_ktiria","meleti_metra","meleti_piges","meleti_programma_ie","meleti_programma_ta","meleti_proswpiko","meleti_qa","meleti_sxedio","meleti_teyxos","meleti_ypeythinos");
+	$meleti_tables = array("meletes","meleti_entypa","meleti_idioktitis","meleti_ktiria","meleti_measurements","meleti_metra","meleti_piges","meleti_programma_ie","meleti_programma_ta","meleti_proswpiko","meleti_qa","meleti_sxedio","meleti_taktikoielegxoi","meleti_teyxos","meleti_theseiserg","meleti_ypeythinos");
 	$delete_parameters_user = array ("id" => $_GET["user_id"]);
 	$delete_parameters_meleti = array ("user_id" => $_GET["user_id"]);
 	
@@ -56,6 +56,8 @@ if(isset($_GET['action']) AND $_GET['action']=='delete_user'){
 		
 		//Διαγραφή χρήστη
 		$delete_user = $database->delete($user_table,$delete_parameters_user);
+		//Διαγραφή ειδικοτήτων χρήστη
+		$delete_user_eidikotiteserg = $database->delete("user_eidikotiteserg",$delete_parameters_meleti);
 	}else{
 	$err[]='Δεν μπορείτε να διαγράψετε λογαριασμό του διαχειριστή.';
 	}

@@ -34,9 +34,16 @@ confirm_logged_in();
 			    <div class="alert alert-info">
 				<button type="button" class="close" data-dismiss="alert">&times;</button>
 				<h4>Προσωπικό</h4>
-				Προσωπικό περιγραφή βοήθειας
-				<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-				<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+				Δηλώστε τον αριθμό των εργαζομένων, τους υπεύθυνους προσωπικού και τις θέσεις εργασίας.<br/><br/>
+				Στους εργαζομένους της επιχείρησης μπορείτε να δηλώσετε ονομαστικά τους εργαζομένους προσθέτοντας για κάθε 
+				έναν από αυτούς μία γραμμή και το ονοματεπώνυμό του είτε να προσθέσετε ομάδες εργαζομένων ως μία γραμμή και 
+				τον αριθμό τους.<br/><br/>
+				Οι υπεύθυνοι προσωπικού δεν προσμετρώνται στον συνολικό αριθμό των εργαζομένων. Εάν κάποιος δηλωμένος 
+				εργαζόμενος στον πίνακα προσωπικού της επιχείρησης έχει αναλάβει το ρόλο του υπευθύνου για κάποιο τομέα 
+				πχ ο Διευθυντής βρίσκεται στην μισθοδοσία της επιχείρησης τότε πρέπει να προστεθεί και στους εργαζομένους 
+				αλλά και στους υπευθύνους.<br/><br/>
+				Οι θέσεις εργασίας είναι οι πραγματικοί τομείς ευθύνης του κάθε εργαζόμενου. Δεν δηλώνεται το ονοματεπώνυμο 
+				καθώς αποτελεί συνήθη πρακτική σε μία θέση εργασίας να μπορούν να εναλλάσσονται περισσότεροι του ενός εργαζόμενοι.
 				</div>
 		</div>
 		
@@ -45,7 +52,8 @@ confirm_logged_in();
 			<ul>
 				<li><a href="#tabs-1">Προσωπικό</a></li>
 				<li><a href="#tabs-2">Υπεύθυνοι</a></li>
-				<li><a href="#tabs-3" onclick="get_proswpiko();">Σύνολο εργαζομένων</a></li>
+				<li><a href="#tabs-3">Θέσεις εργασίας</a></li>
+				<li><a href="#tabs-4" onclick="get_proswpiko();">Σύνολο εργαζομένων</a></li>
 			</ul>
 			
 			<div id="tabs-1">
@@ -58,8 +66,9 @@ confirm_logged_in();
 					id: {key: true,create: false,edit: false,list: false},
 					user_id: {create: false,edit: false,list: false},
 					meleti_id: {create: false,edit: false,list: false},
-					ktirio_id: {title: 'Κτίριο',width: '20%',listClass: 'center',options: ".getktiria()."},
-					ar_ergazomenoi: {title: 'Αρ. εργαζομένων',width: '20%',listClass: 'center'},
+					ktirio_id: {title: 'Κτίριο',width: '10%',listClass: 'center',options: ".getktiria()."},
+					ar_ergazomenoi: {title: 'Αρ. εργαζομένων',width: '10%',listClass: 'center'},
+					name: {title: 'Ονομ/μο',width: '20%',listClass: 'center'},
 					type_ergazomenoi: {title: 'Ειδικότητα',width: '20%',listClass: 'center',options:".get_eidikotitaerg()."},
 					gender: {title: 'Φύλλο-Ηλ. ομάδα',width: '20%',listClass: 'center', type: 'radiobox',options: 
 						{
@@ -72,7 +81,7 @@ confirm_logged_in();
 						'1':'Πλήρης απασχόληση',
 						'2':'Μερική απασχόληση',
 						'1':'Ορισμένου χρόνου'
-						}}
+						}}	
 				}";
 				include('includes/jtable.php');
 			?>	
@@ -109,8 +118,185 @@ confirm_logged_in();
 			?>
 			</div>
 			
-			
 			<div id="tabs-3">
+			<?php 
+				$ped="meleti_theseiserg";
+				$dig="0|0|0|0|0|0|0|0|0|0|0|0|0";
+				$tb_name="meleti_theseiserg";
+				$tb_title = "Θέσεις εργασίας";
+				$fields="fields: {
+					id: {key: true,create: false,edit: false,list: false},
+					user_id: {create: false,edit: false,list: false},
+					meleti_id: {create: false,edit: false,list: false},
+					ktirio_id: {title: 'Κτίριο',width: '10%',listClass: 'center',options: ".getktiria()."},
+					perigrafi: {title: 'Περιγραφή',width: '20%',listClass: 'center', type: 'textarea'},
+					simansi: {title: 'Σημάνσεις',width: '20%',listClass: 'center', type: 'textarea'},
+					kalwdia: {title: 'Ελεύθερα καλώδια',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					dapedo: {title: 'Ολισθηρό δάπεδο',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					fwtismos: {title: 'Φωτισμός',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					thermiko: {title: 'Θερμικό περιβάλλον',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					eksaerismos: {title: 'Εξαερισμός',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					aktinovolies: {title: 'Ακτινοβολίες',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					thorivos: {title: 'Θόρυβος',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					doniseis: {title: 'Δονήσεις',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					ktirio: {title: 'Κτιριολογικές απαιτήσεις',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					pc: {title: 'Εργασία με ΗΥ',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					viologikoi: {title: 'Βιολογικοί παράγοντες',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					ximikoi: {title: 'Χημικοί παράγοντες',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					karkinogonoi: {title: 'Καρκινογόνοι παράγοντες',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					reyma: {title: 'Ηλεκτρικό ρεύμα',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					ekriktika: {title: 'Εκρηκτικές ατμόσφαιρες',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					pyrasfaleia: {title: 'Πυρασφάλεια',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					ypsos: {title: 'Εργασία σε ύψος',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					periorismenoi: {title: 'Περιορισμένοι χώροι',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					xeironaktika: {title: 'Χειρονακτικός χειρισμός φορτίων',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					forita: {title: 'Φορητά εργαλεία',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					syntirisi: {title: 'Συντήρηση - Επισκευές',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					kopi: {title: 'Κοπή μετάλλων',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					peronofora: {title: 'Περονοφόρα-Ανυψωτικά',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					aporimatofora: {title: 'Απορριμματοφόρα',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					klark: {title: 'Κλαρκ',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					oximatametaforas: {title: 'Οχήματα μεταφοράς φορτίου',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					xwmatoyrgika: {title: 'Χωματουργικές εργασίες',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					epivlepseis: {title: 'Επιβλέψεις - Τεχνικά έργα',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					naypigika: {title: 'Ναυπηγικές εργασίες',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					metaleytikalatomika: {title: 'Μεταλευτικές - Λατομικές εργασίες',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					stress: {title: 'Ψυχοκοινωνικοί κίνδυνοι',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}},
+					viologikoikathar: {title: 'Βιολογικοί καθαρισμοί',list: false,options: 
+						{
+						'1':'OXI',
+						'2':'NAI',
+						}}
+				}";
+				include('includes/jtable.php');
+			?>
+			</div>
+			
+			<div id="tabs-4">
 			<table><tr><td style="width:135px;">
 			<img src="images/extras.png"><br/></td><td>
 <!--			Ανανεώστε τη σελίδα σε κάθε αλλαγή στην καρτέλα "Προσωπικό" και "Υπεύθυνοι".  -->
